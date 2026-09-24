@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AT&amp;T Connectivity Marketplace — VTEX Architecture v2.12</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --vtex-pink: #F71963;
+      --vtex-pink-dark: #E31C58;
+      --vtex-pink-soft: #FFE5EE;
+      --vtex-pink-muted: #FFF0F5;
+      --vtex-pink-border: #F9B4CB;
+      --ink: #142032;
+      --ink-muted: #4A5568;
+      --ink-soft: #718096;
+      --surface: #FFFFFF;
+      --surface-alt: #F7F8FA;
+      --channel: #3D4451;
+      --border: #D0D5DD;
+      --border-strong: #98A2B3;
+      --arrow: #667085;
+      --mtls: #9E165F;
+      --mtls-bg: #FDF2F8;
+      --mtls-border: #F9A8D4;
+      --tag: #6941C6;
+      --tag-bg: #F4F0FF;
+      --tag-border: #D6BBFB;
+      --integ: #E8EEF5;
+      --integ-border: #B8C7D9;
+      --in: #027A48;
+      --out: #B54708;
+      --shadow: 0 1px 2px rgba(20, 32, 50, 0.06), 0 4px 12px rgba(20, 32, 50, 0.04);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247, 25, 99, 0.08), transparent),
+        linear-gradient(180deg, #FAFBFC 0%, #F0F2F5 100%);
+      min-height: 100vh;
+      padding: 40px 20px 64px;
+      line-height: 1.45;
+    }
+
+    .page { max-width: 1480px; margin: 0 auto; }
+
+    header.page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--vtex-pink);
+    }
+
+    .vtex-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--vtex-pink);
+      margin-bottom: 8px;
+    }
+
+    h1 { font-size: clamp(22px, 3vw, 28px); font-weight: 700; letter-spacing: -0.02em; }
+    .subtitle { font-size: 13px; color: var(--ink-muted); max-width: 640px; margin-top: 4px; }
+
+    .meta-badge {
+      flex-shrink: 0;
+      background: var(--vtex-pink-muted);
+      border: 1px solid var(--vtex-pink-border);
+      color: var(--vtex-pink-dark);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .meta-badge span {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+
+    .version-note {
+      font-size: 12px;
+      color: var(--ink-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+    }
+    .version-note a { color: var(--vtex-pink-dark); font-weight: 600; }
+
+    /* —— Shared —— */
+    .node {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .node strong { display: block; font-size: 12.5px; font-weight: 600; }
+    .node .hint {
+      display: block;
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+      font-style: italic;
+    }
+    .node .vendor {
+      display: inline-block;
+      margin-top: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--vtex-pink-dark);
+      background: var(--vtex-pink-muted);
+      border: 1px solid var(--vtex-pink-border);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    /* MVP (green) / North Star (blue) vendor & phase chips */
+    .phases {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      justify-content: center;
+      margin-top: 6px;
+    }
+    .phase {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid;
+      line-height: 1.2;
+    }
+    .phase-mvp {
+      color: #027A48;
+      background: #ECFDF3;
+      border-color: #A6F4C5;
+    }
+    .phase-ns {
+      color: #175CD3;
+      background: #EFF8FF;
+      border-color: #B2DDFF;
+    }
+
+    /* Full-box phase coloring (MVP green / North Star blue) */
+    .node-mvp {
+      background: #ECFDF3 !important;
+      border-color: #A6F4C5 !important;
+    }
+    .node-mvp strong { color: #027A48; }
+    .node-mvp .hint { color: #027A48; opacity: 0.8; }
+    .node-ns {
+      background: #EFF8FF !important;
+      border-color: #B2DDFF !important;
+    }
+    .node-ns strong { color: #175CD3; }
+    .node-ns .hint { color: #175CD3; opacity: 0.8; }
+
+    .layer-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--tag);
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .chip-mtls {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--mtls);
+      background: var(--mtls-bg);
+      border: 1px solid var(--mtls-border);
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    /* —— Diagram —— */
+    .diagram-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px 32px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Main layout: top (CDN stack) | Direct + Core + Partners | below (integ + enterprise) */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr) 280px;
+      grid-template-areas:
+        ".       top      ."
+        "direct  core     partners"
+        ".       below    .";
+      gap: 10px 12px;
+      align-items: start;
+    }
+    .area-top { grid-area: top; }
+    .area-direct { grid-area: direct; align-self: stretch; }
+    .area-core { grid-area: core; }
+    .area-partners { grid-area: partners; align-self: start; }
+    .area-below { grid-area: below; }
+
+    .vtex-stack {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .channels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .node-channel {
+      background: var(--channel);
+      border-color: var(--channel);
+      color: #fff;
+    }
+    .node-channel strong { color: #fff; }
+    .node-channel .hint { color: rgba(255,255,255,0.72); }
+
+    .flow-down {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 36px;
+      margin: 4px 0;
+      position: relative;
+    }
+    .flow-down .shaft { width: 2px; flex: 1; background: var(--arrow); }
+    .flow-down .head {
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--arrow);
+    }
+    .flow-down .head-up {
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 8px solid var(--arrow);
+    }
+    .flow-down .tag {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(10px, -50%);
+    }
+
+    /* CDN only as wide as the VTEX stack (left column) */
+    .cdn-bar {
+      background: var(--vtex-pink);
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      padding: 14px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(247, 25, 99, 0.35);
+      width: 100%;
+    }
+    .cdn-bar span {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.9;
+      margin-top: 2px;
+      letter-spacing: 0;
+    }
+
+    .core {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--vtex-pink-border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .core-title {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--border);
+    }
+    .core-title em { font-style: normal; color: var(--vtex-pink); }
+
+    .fe-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .fe-row .node-module {
+      min-height: 58px;
+    }
+    .groups {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .group {
+      background: var(--surface);
+      border: 1.5px solid var(--vtex-pink-border);
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+    .group.full { margin-top: 0; }
+    .group-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--vtex-pink);
+      margin-bottom: 8px;
+    }
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      flex: 1;
+      align-content: stretch;
+      grid-auto-rows: 1fr;
+    }
+    .node-module {
+      background: var(--vtex-pink);
+      border-color: var(--vtex-pink-dark);
+      color: #fff;
+      min-width: 0;
+      padding: 8px 6px;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .node-module strong { font-size: 11px; color: #fff; }
+    .node-module .hint { color: rgba(255,255,255,0.8); font-size: 9.5px; }
+    .module-grid.stack {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(2, 1fr);
+    }
+    .module-grid.stack .node-module {
+      min-height: 0;
+    }
+    .module-grid.cols-6 {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    /* Side columns — arrows are row-aligned with their boxes */
+    .side-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 0;
+    }
+    .side-spacer { min-height: 168px; }
+    .side-col .layer-label { text-align: center; margin-bottom: 2px; }
+
+    .h-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      width: 58px;
+      flex-shrink: 0;
+    }
+    .h-link .rail {
+      width: 100%;
+      height: 2.5px;
+      background: var(--arrow);
+      position: relative;
+    }
+    .h-link.to-right .rail::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: -5px;
+      border-left: 7px solid var(--arrow);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+    .h-link.to-left .rail::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: -5px;
+      border-right: 7px solid var(--arrow);
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+
+    /* Left: AT&T Direct container + arrows outside */
+    .left-band {
+      display: grid;
+      grid-template-columns: 1fr 58px;
+      gap: 8px;
+      align-items: start;
+      height: 100%;
+    }
+    .att-direct-box {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 10px 14px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .att-direct-box .box-title,
+    .direct-arrows .title-spacer {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-align: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border);
+      line-height: 1.35;
+      min-height: 42px;
+    }
+    .direct-arrows .title-spacer {
+      visibility: hidden;
+      border-color: transparent;
+    }
+    .att-direct-box .box-title span {
+      display: block;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+      font-size: 10px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+    .slot-sso { margin-top: 8px; }
+    .slot-datalake { margin-top: auto; margin-bottom: 18%; }
+    .direct-arrows {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .direct-arrows .slot-sso,
+    .direct-arrows .slot-datalake {
+      display: flex;
+      align-items: center;
+      min-height: 72px;
+    }
+    .left-band { height: 100%; }
+    .area-direct .left-band { min-height: 100%; }
+
+    .node-partner { width: 100%; border-color: var(--border-strong); }
+    .node-att-direct {
+      width: 100%;
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      min-height: 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .node-att-direct strong {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+    .node-att-direct .hint {
+      display: block;
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+      font-style: italic;
+    }
+
+    /* Right: one row per partner = arrow + box (perfect alignment) */
+    .partner-row {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 6px;
+      align-items: center;
+    }
+
+    /* Integration + enterprise — arrows outside the enterprise container */
+    .integ-bar {
+      margin-top: 4px;
+      background: var(--integ);
+      border: 1.5px solid var(--integ-border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .integ-bar strong { font-size: 13px; }
+    .integ-bar .hint { font-size: 11px; color: var(--ink-soft); }
+
+    .enterprise-block { margin-top: 4px; }
+    .enterprise-arrows {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin: 8px 0 6px;
+    }
+    .ent-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-height: 44px;
+    }
+    .ent-arrow .shaft { width: 2px; flex: 1; min-height: 14px; background: var(--arrow); }
+    .ent-arrow .head {
+      width: 0; height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid var(--arrow);
+    }
+    .enterprise-wrap {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 10px;
+    }
+    .enterprise-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      align-items: stretch;
+    }
+    .node-enterprise {
+      background: var(--surface-alt);
+      min-height: 72px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 22px;
+      margin-top: 20px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .swatch {
+      width: 16px; height: 12px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+    .swatch.pink { background: var(--vtex-pink); border-color: var(--vtex-pink); }
+    .swatch.channel { background: var(--channel); }
+    .swatch.integ { background: var(--integ); border-color: var(--integ-border); }
+    .swatch.mvp { background: #ECFDF3; border-color: #A6F4C5; }
+    .swatch.ns { background: #EFF8FF; border-color: #B2DDFF; }
+
+    /* —— Detail sections below —— */
+    .details {
+      margin-top: 32px;
+    }
+    .details > h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .details > h2::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      background: var(--vtex-pink);
+      border-radius: 2px;
+    }
+    .details > p.intro {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 18px;
+    }
+
+    .detail-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 24px 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .detail-section h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .detail-section .sec-intro {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+
+    .iface-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      background: var(--surface-alt);
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    .iface-card:last-child { margin-bottom: 0; }
+    .iface-card .id-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .iface-card .body h4 {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .iface-card .body .ref {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+    .iface-card .body .ref strong { color: var(--vtex-pink-dark); }
+    .calls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .call {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid;
+    }
+    .call-out {
+      color: var(--out);
+      background: #FFFAEB;
+      border-color: #FEDF89;
+    }
+    .call-in {
+      color: var(--in);
+      background: #ECFDF3;
+      border-color: #A6F4C5;
+    }
+    .call-note {
+      color: var(--ink-soft);
+      background: var(--surface);
+      border-color: var(--border);
+      font-weight: 500;
+    }
+
+    .glossary {
+      margin-top: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+    }
+    .glossary h2 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .glossary h2::before {
+      content: "";
+      width: 4px;
+      height: 16px;
+      background: var(--vtex-pink);
+      border-radius: 2px;
+    }
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 10px;
+    }
+    .term {
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+    }
+    .term dt { font-size: 12px; font-weight: 700; color: var(--vtex-pink-dark); margin-bottom: 3px; }
+    .term dd { font-size: 11.5px; color: var(--ink-muted); margin: 0; }
+
+    footer.page-footer {
+      margin-top: 28px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--ink-soft);
+    }
+    footer.page-footer strong { color: var(--vtex-pink); }
+
+    @media (max-width: 1100px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "top"
+          "direct"
+          "core"
+          "partners"
+          "below";
+      }
+      .att-direct-box { min-height: 0; height: auto; }
+      .left-band { grid-template-columns: 1fr 50px; }
+      .slot-sso, .slot-datalake { margin-top: 12px; margin-bottom: 0; }
+      .direct-arrows { height: auto; }
+      .partner-row { grid-template-columns: 50px 1fr; }
+      .enterprise-row, .enterprise-arrows { grid-template-columns: repeat(2, 1fr); }
+      .fe-row, .groups, .channels { grid-template-columns: 1fr; }
+      .iface-card { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #fff; padding: 8px; }
+      .diagram-wrap, .detail-section, .glossary { box-shadow: none; break-inside: avoid; }
+      .coverage-bar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <div>
+        <div class="vtex-mark">
+          <svg width="28" height="20" viewBox="0 0 28 20" aria-hidden="true">
+            <path fill="#F71963" d="M2 2h8.5l3.5 8.2L17.5 2H26l-8.5 16H9.5L2 2z"/>
+          </svg>
+          VTEX Architecture · v2.12
+        </div>
+        <h1>AT&amp;T Connectivity Marketplace</h1>
+        <p class="subtitle">
+          AT&amp;T Direct aligns with the VTEX Account. Boxes include MVP / North Star phase chips.
+          FE surfaces use VTEX module styling. Call details below.
+        </p>
+      </div>
+      <div class="meta-badge"><span>Platform</span>VTEX Account</div>
+    </header>
+
+    <div class="version-note">
+      Updated Aug 11, 2026 after the Aug 6 onsite (VTEX Supplier Visit with Jeff Howard &amp; Sarah Day, plus the VTEX CSO security session). Key changes: FE stack confirmed (FastStore for MVP, headless for North Star); DataLake resolved to AT&amp;T Snowflake via VTEX Data Pipeline; seller model clarified (AT&amp;T curates its own sellers directly, orders auto-split); credit engine confirmed to live outside VTEX; in-line buy-flow sequencing clarified; and a TLS 1.3 compliance gap flagged (AT&amp;T deadline Dec 31, 2026, VTEX has no confirmed roadmap yet). Payment split / multi-seller settlement still needs a dedicated deep-dive before MVP build.
+    </div>
+
+    <!-- ===================== DIAGRAM ===================== -->
+    <div class="diagram-wrap">
+
+      <div class="main-grid">
+
+        <!-- TOP: channels + CDN (center only) -->
+        <div class="area-top">
+          <div class="layer-label">Customer entry channels</div>
+          <div class="channels">
+            <div class="node node-channel">
+              <strong>myAT&amp;T App</strong>
+              <span class="hint">Deep link / SSO</span>
+            </div>
+            <div class="node node-channel">
+              <strong>att.com</strong>
+              <span class="hint">Post-activation CTA</span>
+            </div>
+            <div class="node node-channel">
+              <strong>In-line Buy Flow</strong>
+              <span class="hint">connectivity first (AT&amp;T), device second (VTEX)</span>
+            </div>
+          </div>
+          <div class="flow-down" aria-hidden="true">
+            <div class="head-up"></div>
+            <div class="shaft"></div>
+            <div class="head"></div>
+            <span class="tag">IF-01…03</span>
+          </div>
+          <div class="cdn-bar">
+            VTEX CDN
+            <span>Edge · caching · TLS · WAF — storefront / webview traffic only</span>
+          </div>
+          <div class="flow-down" aria-hidden="true">
+            <div class="head-up"></div>
+            <div class="shaft"></div>
+            <div class="head"></div>
+            <span class="tag">IF-04</span>
+          </div>
+        </div>
+
+        <!-- LEFT: AT&T Direct @ same height as VTEX Account; arrows outside -->
+        <aside class="area-direct">
+          <div class="left-band">
+            <div class="att-direct-box">
+              <div class="box-title">
+                AT&amp;T Direct
+                <span>no Integration layer</span>
+              </div>
+              <div class="slot-sso">
+                <div class="node node-att-direct node-mvp">
+                  <strong>AT&amp;T SSO</strong>
+                  <span class="hint">Deep link / SSO</span>
+                </div>
+              </div>
+              <div class="slot-datalake">
+                <div class="node node-att-direct node-ns">
+                  <strong>DataLake</strong>
+                  <span class="hint">AT&amp;T Snowflake via VTEX Data Pipeline</span>
+                </div>
+              </div>
+            </div>
+            <div class="direct-arrows" aria-hidden="true">
+              <div class="title-spacer">AT&amp;T Direct</div>
+              <div class="slot-sso">
+                <div class="h-link to-right">
+                  <span class="tag">IF-E1</span>
+                  <div class="rail"></div>
+                </div>
+              </div>
+              <div class="slot-datalake">
+                <div class="h-link to-right">
+                  <span class="tag">IF-E8</span>
+                  <div class="rail"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- CENTER: VTEX Account -->
+        <div class="area-core">
+          <div class="core">
+            <div class="core-title">AT&amp;T Connectivity Marketplace — <em>VTEX Account</em></div>
+
+            <div class="fe-row">
+              <div class="node node-module">
+                <strong>Storefront</strong>
+                <span class="hint">marketplace.att.com</span>
+                <div class="phases">
+                  <span class="phase phase-mvp">FastStore</span>
+                  <span class="phase phase-ns">Headless (AT&amp;T-owned FE)</span>
+                </div>
+              </div>
+              <div class="node node-module">
+                <strong>VTEX CX Platform</strong>
+                <span class="hint">Conversational interface</span>
+              </div>
+            </div>
+
+            <div class="groups">
+              <div class="group">
+                <div class="group-title">Digital Commerce</div>
+                <div class="module-grid">
+                  <div class="node node-module"><strong>Catalog</strong></div>
+                  <div class="node node-module"><strong>Pricing</strong></div>
+                  <div class="node node-module"><strong>Promotions</strong></div>
+                  <div class="node node-module"><strong>Channel Management</strong></div>
+                  <div class="node node-module"><strong>CMS</strong></div>
+                  <div class="node node-module"><strong>AI Search Engine</strong></div>
+                </div>
+              </div>
+              <div class="group">
+                <div class="group-title">Marketplace Management</div>
+                <div class="module-grid stack">
+                  <div class="node node-module"><strong>Seller Management</strong></div>
+                  <div class="node node-module"><strong>Offer Management</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="group full">
+              <div class="group-title">Transactional modules</div>
+              <div class="module-grid cols-6">
+                <div class="node node-module"><strong>Inventory</strong></div>
+                <div class="node node-module"><strong>Order Allocation</strong></div>
+                <div class="node node-module"><strong>Delivery Promise</strong></div>
+                <div class="node node-module"><strong>Logistics</strong></div>
+                <div class="node node-module"><strong>Checkout</strong></div>
+                <div class="node node-module"><strong>Payment Gateway</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: partners aligned with VTEX Account -->
+        <aside class="area-partners side-col">
+          <div class="layer-label">External partners</div>
+          <div class="partner-row">
+            <div class="h-link to-left" aria-hidden="true">
+              <span class="tag">IF-P1</span>
+              <div class="rail"></div>
+            </div>
+            <div class="node node-partner">
+              <strong>Financing Providers</strong>
+              <div class="phases">
+                <span class="phase phase-mvp">Affirm</span>
+              </div>
+            </div>
+          </div>
+          <div class="partner-row">
+            <div class="h-link to-left" aria-hidden="true">
+              <span class="tag">IF-P2</span>
+              <div class="rail"></div>
+            </div>
+            <div class="node node-partner">
+              <strong>Trade-in Partners</strong>
+              <div class="phases">
+                <span class="phase phase-ns">Assurant</span>
+              </div>
+            </div>
+          </div>
+          <div class="partner-row">
+            <div class="h-link to-left" aria-hidden="true">
+              <span class="tag">IF-P3</span>
+              <div class="rail"></div>
+            </div>
+            <div class="node node-partner">
+              <strong>Device Protection</strong>
+              <div class="phases">
+                <span class="phase phase-mvp">Asurion</span>
+              </div>
+            </div>
+          </div>
+          <div class="partner-row">
+            <div class="h-link to-left" aria-hidden="true">
+              <span class="tag">IF-P4</span>
+              <div class="rail"></div>
+            </div>
+            <div class="node node-partner">
+              <strong>3rd-Party Sellers</strong>
+              <span class="hint">AT&amp;T-curated OEMs (Samsung, Motorola…)</span>
+              <div class="phases">
+                <span class="phase phase-ns">External</span>
+              </div>
+            </div>
+          </div>
+          <div class="partner-row">
+            <div class="h-link to-left" aria-hidden="true">
+              <span class="tag">IF-P5</span>
+              <div class="rail"></div>
+            </div>
+            <div class="node node-partner">
+              <strong>Payment Processors</strong>
+              <div class="phases">
+                <span class="phase phase-mvp">Braintree</span>
+                <span class="phase phase-ns">Fiserv</span>
+              </div>
+            </div>
+          </div>
+          <div class="partner-row">
+            <div class="h-link to-left" aria-hidden="true">
+              <span class="tag">IF-P6</span>
+              <div class="rail"></div>
+            </div>
+            <div class="node node-partner">
+              <strong>Logistics / 3PL</strong>
+              <div class="phases">
+                <span class="phase phase-mvp">WMS</span>
+                <span class="phase phase-ns">External</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- BELOW: Integration + Enterprise (arrows outside container) -->
+        <div class="area-below">
+          <div class="flow-down" aria-hidden="true" style="margin-top:4px;">
+            <div class="shaft"></div>
+            <div class="head"></div>
+            <span class="tag">IF-10</span>
+          </div>
+          <div class="integ-bar">
+            <strong>Integration layer</strong>
+            <span class="chip-mtls">mTLS</span>
+            <span class="hint">NewSoft</span>
+          </div>
+          <div class="enterprise-block">
+            <div class="layer-label">AT&amp;T Enterprise Systems <span style="text-transform:none;letter-spacing:0;font-weight:500;">(via Integration layer)</span></div>
+            <div class="enterprise-arrows" aria-hidden="true">
+              <div class="ent-arrow"><span class="tag">IF-E3</span><div class="shaft"></div><div class="head"></div></div>
+              <div class="ent-arrow"><span class="tag">IF-E4</span><div class="shaft"></div><div class="head"></div></div>
+              <div class="ent-arrow"><span class="tag">IF-E5</span><div class="shaft"></div><div class="head"></div></div>
+              <div class="ent-arrow"><span class="tag">IF-E6</span><div class="shaft"></div><div class="head"></div></div>
+              <div class="ent-arrow"><span class="tag">IF-E7</span><div class="shaft"></div><div class="head"></div></div>
+            </div>
+            <div class="enterprise-wrap">
+              <div class="enterprise-row">
+                <div class="node node-enterprise node-mvp">
+                  <strong>AT&amp;T OSS</strong>
+                  <span class="hint">issuing / retrieving credits</span>
+                </div>
+                <div class="node node-enterprise node-ns">
+                  <strong>Loyalty Platform</strong>
+                </div>
+                <div class="node node-enterprise node-ns">
+                  <strong>Fraud CTX</strong>
+                  <div class="phases">
+                    <span class="phase phase-mvp">Braintree</span>
+                  </div>
+                </div>
+                <div class="node node-enterprise node-ns">
+                  <strong>Billing API</strong>
+                </div>
+                <div class="node node-enterprise node-ns">
+                  <strong>Adobe Analytics &amp; Target</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="swatch channel"></span> Channels</div>
+        <div class="legend-item"><span class="swatch pink"></span> VTEX CDN / modules (CDN over core only)</div>
+        <div class="legend-item"><span class="swatch integ"></span> Integration layer</div>
+        <div class="legend-item"><span class="swatch mvp"></span> MVP Phase</div>
+        <div class="legend-item"><span class="swatch ns"></span> North Star Phase</div>
+        <div class="legend-item"><span class="chip-mtls">mTLS</span> Integration-layer traffic</div>
+        <div class="legend-item">↕ Bidirectional (request + response)</div>
+      </div>
+    </div>
+
+    <!-- ===================== DESCRIPTIONS BELOW ===================== -->
+    <div class="details">
+      <h2>Interface descriptions</h2>
+      <p class="intro">
+        Each tag on the diagram maps to a row below: which VTEX capability is involved, and the calls exchanged.
+      </p>
+
+      <!-- Entry -->
+      <section class="detail-section">
+        <h3>Entry channels → VTEX</h3>
+        <p class="sec-intro">How customers reach the marketplace.</p>
+
+        <div class="iface-card" id="IF-01">
+          <div class="id-col">
+            <span class="tag">IF-01</span>
+          </div>
+          <div class="body">
+            <h4>myAT&amp;T App → App Webview</h4>
+            <p class="ref">VTEX: <strong>App Webview</strong> · Direct: <strong>AT&amp;T SSO</strong> (IF-E1, no Integration layer)</p>
+            <div class="calls">
+              <span class="call call-out">→ Deep link URL</span>
+              <span class="call call-out">→ SSO / OIDC token</span>
+              <span class="call call-in">← Webview HTML / session</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-02">
+          <div class="id-col"><span class="tag">IF-02</span></div>
+          <div class="body">
+            <h4>att.com → Storefront</h4>
+            <p class="ref">VTEX: <strong>Storefront</strong> (marketplace.att.com)</p>
+            <div class="calls">
+              <span class="call call-out">→ Post-activation CTA redirect</span>
+              <span class="call call-out">→ Account / line context</span>
+              <span class="call call-in">← Storefront page</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-03">
+          <div class="id-col"><span class="tag">IF-03</span></div>
+          <div class="body">
+            <h4>In-line Buy Flow → Checkout</h4>
+            <p class="ref">VTEX: <strong>Checkout</strong> (Transactional) · Channel Management</p>
+            <div class="calls">
+              <span class="call call-out">→ New activation context</span>
+              <span class="call call-out">→ Plan / device intent</span>
+              <span class="call call-in">← In-line checkout</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-04">
+          <div class="id-col"><span class="tag">IF-04</span></div>
+          <div class="body">
+            <h4>VTEX CDN → VTEX Account</h4>
+            <p class="ref">VTEX: <strong>CDN</strong> → Store Framework origin</p>
+            <div class="calls">
+              <span class="call call-out">→ Routed HTTPS + session</span>
+              <span class="call call-in">← SSR / static assets</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- External partners -->
+      <section class="detail-section">
+        <h3>External partners <span class="chip-mtls" style="margin-left:8px;vertical-align:middle;">mTLS via Integration layer</span></h3>
+        <p class="sec-intro">Side column on the diagram. Each IF-P* tag points to the partner box; details here.</p>
+
+        <div class="iface-card" id="IF-P1">
+          <div class="id-col">
+            <span class="tag">IF-P1</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>Financing Providers — Affirm</h4>
+            <p class="ref">VTEX: <strong>Checkout</strong> · <strong>Payment Gateway</strong></p>
+            <div class="calls">
+              <span class="call call-out">POST → Credit application (cart, identity)</span>
+              <span class="call call-in">← Approval / decline + APR / term</span>
+              <span class="call call-in">← Finance contract ID</span>
+              <span class="call call-out">POST → Bind contract to order</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-P2">
+          <div class="id-col">
+            <span class="tag">IF-P2</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>Trade-in Partners — Assurant</h4>
+            <p class="ref">VTEX: <strong>Catalog</strong> · <strong>Checkout</strong> · <strong>Pricing</strong></p>
+            <div class="calls">
+              <span class="call call-out">POST → Device model / IMEI / condition</span>
+              <span class="call call-in">← Quote $ + expiry</span>
+              <span class="call call-in">← Shipping label / kit</span>
+              <span class="call call-out">POST → Accept quote / order ID</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-P3">
+          <div class="id-col">
+            <span class="tag">IF-P3</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>Device Protection — Asurion</h4>
+            <p class="ref">Device integration with VTEX: <strong>Quotation and Price</strong></p>
+            <p class="ref">VTEX: <strong>Checkout</strong> · <strong>Pricing</strong></p>
+            <div class="calls">
+              <span class="call call-out">POST → Issuing a device</span>
+              <span class="call call-out">POST → Quotation / price request</span>
+              <span class="call call-in">← Eligible plans + premium</span>
+              <span class="call call-out">POST → Bind policy on order</span>
+              <span class="call call-in">← Policy confirmation</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-P4">
+          <div class="id-col">
+            <span class="tag">IF-P4</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>3rd-Party Sellers — AT&amp;T-curated OEMs</h4>
+            <p class="ref">VTEX: <strong>Seller Management</strong> · <strong>Offer Management</strong> · <strong>Order Allocation</strong></p>
+            <div class="calls">
+              <span class="call call-out">POST → Seller submits catalog items for AT&amp;T review</span>
+              <span class="call call-in">← Offer feed (SKU / price / stock) — pricing, inventory &amp; fulfillment stay with the seller</span>
+              <span class="call call-out">POST → Order notification (auto-split by seller: 1 customer order, N sub-orders)</span>
+              <span class="call call-in">← Fulfillment / invoice</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-P5">
+          <div class="id-col">
+            <span class="tag">IF-P5</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>Payment Processors — Braintree / Fiserv</h4>
+            <p class="ref">VTEX: <strong>Payment Gateway</strong> · <strong>Checkout</strong></p>
+            <div class="calls">
+              <span class="call call-out">POST → Auth / capture</span>
+              <span class="call call-out">POST → Refund / void</span>
+              <span class="call call-in">← Auth code / decline</span>
+              <span class="call call-in">← Settlement webhook</span>
+              <span class="call call-note">MVP: Braintree · North Star: Fiserv</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-P6">
+          <div class="id-col">
+            <span class="tag">IF-P6</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>Logistics / 3PL — WMS / External</h4>
+            <p class="ref">VTEX: <strong>Logistics</strong> · <strong>Order Allocation</strong> · <strong>Delivery Promise</strong> · <strong>Inventory</strong></p>
+            <div class="calls">
+              <span class="call call-out">POST → Fulfillment order (ship-to, SLA)</span>
+              <span class="call call-in">← Tracking / ship / deliver events</span>
+              <span class="call call-in">← WMS inventory adjustments</span>
+              <span class="call call-note">MVP: WMS · North Star: External</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Direct AT&T on the right -->
+      <section class="detail-section">
+        <h3>Direct AT&amp;T connections (left column) <span class="call call-note" style="margin-left:8px;vertical-align:middle;">no Integration layer</span></h3>
+        <p class="sec-intro">SSO and DataLake sit in the left column, connected straight to the VTEX Account (not via Integration layer).</p>
+
+        <div class="iface-card" id="IF-E1">
+          <div class="id-col">
+            <span class="tag">IF-E1</span>
+            <span class="call call-note" style="font-size:9.5px;">direct · storefront level</span>
+          </div>
+          <div class="body">
+            <h4>AT&amp;T SSO → VTEX (direct)</h4>
+            <p class="ref">VTEX: <strong>App Webview</strong> · <strong>Storefront</strong> session bind</p>
+            <div class="calls">
+              <span class="call call-out">POST → Token validate / authn</span>
+              <span class="call call-in">← Claims (BAN / line / identity, customer group/tier)</span>
+              <span class="call call-out">→ Create VTEX session</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-E8">
+          <div class="id-col">
+            <span class="tag">IF-E8</span>
+            <span class="call call-note" style="font-size:9.5px;">direct · mid VTEX</span>
+          </div>
+          <div class="body">
+            <h4>DataLake ← VTEX (direct)</h4>
+            <p class="ref">VTEX: <strong>all modules</strong> (events / telemetry) via <strong>VTEX Data Pipeline</strong></p>
+            <div class="calls">
+              <span class="call call-out">→ Order / cart / browse / search events</span>
+              <span class="call call-out">→ Fulfillment &amp; partner callback logs</span>
+              <span class="call call-in">← AT&amp;T selects data types / frequency</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AT&T Enterprise via integ -->
+      <section class="detail-section">
+        <h3>AT&amp;T Enterprise Systems <span class="chip-mtls" style="margin-left:8px;vertical-align:middle;">mTLS via Integration layer</span></h3>
+        <p class="sec-intro">Bottom row under the VTEX stack. SSO and DataLake are in the left column as direct links.</p>
+
+        <div class="iface-card" id="IF-E3">
+          <div class="id-col">
+            <span class="tag">IF-E3</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>AT&amp;T OSS</h4>
+            <p class="ref">VTEX: <strong>Orders</strong> (Checkout) · <strong>Inventory</strong> · <strong>Pricing</strong> · <strong>Promotions</strong> — AT&amp;T's existing OMS/commerce stack remains system of record; VTEX integrates alongside it, not replacing it</p>
+            <div class="calls">
+              <span class="call call-out">POST → Create / update order</span>
+              <span class="call call-in">← Notification: issuing credits in the wallet</span>
+              <span class="call call-in">← Notification: retrieving credits in the wallet</span>
+              <span class="call call-out">POST → Inventory reservation</span>
+              <span class="call call-in">← Status ACK / stock master</span>
+              <span class="call call-note">Confirmed Aug 6: the net credit balance is computed by an external engine that aggregates multiple AT&amp;T sources (loyalty milestones, plan sign-up bonuses, trade-in value, etc.) — VTEX only stores/applies the balance at checkout. End-to-end flow validated in a POC.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-E4">
+          <div class="id-col">
+            <span class="tag">IF-E4</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>AT&amp;T Loyalty Platform — North Star</h4>
+            <p class="ref">VTEX: <strong>Checkout</strong> · <strong>Promotions</strong></p>
+            <div class="calls">
+              <span class="call call-out">GET → Member / balance / tier</span>
+              <span class="call call-out">POST → Earn points</span>
+              <span class="call call-out">POST → Redeem / burn</span>
+              <span class="call call-in">← Redemption result</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-E5">
+          <div class="id-col">
+            <span class="tag">IF-E5</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>AT&amp;T Fraud CTX</h4>
+            <p class="ref">VTEX: <strong>Checkout</strong> · <strong>Payment Gateway</strong></p>
+            <div class="calls">
+              <span class="call call-out">POST → Fraud check (device / IP / cart)</span>
+              <span class="call call-in">← Score / allow / review / block</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-E6">
+          <div class="id-col">
+            <span class="tag">IF-E6</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>AT&amp;T Billing API</h4>
+            <p class="ref">VTEX: <strong>Checkout</strong> · <strong>Payment Gateway</strong> · Orders</p>
+            <div class="calls">
+              <span class="call call-out">POST → Charge to BAN / line (pay on bill)</span>
+              <span class="call call-out">POST → Adjust / credit</span>
+              <span class="call call-in">← Billing ACK / invoice ref</span>
+              <span class="call call-note">Confirm pay-on-bill capability</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="iface-card" id="IF-E7">
+          <div class="id-col">
+            <span class="tag">IF-E7</span>
+            <span class="chip-mtls">mTLS</span>
+          </div>
+          <div class="body">
+            <h4>Adobe Analytics &amp; Target</h4>
+            <p class="ref">VTEX: <strong>Storefront</strong> · <strong>CX Platform</strong> · Orders</p>
+            <div class="calls">
+              <span class="call call-out">POST → Page / cart / order events</span>
+              <span class="call call-in">← Target experiences / A/B</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Integration -->
+      <section class="detail-section">
+        <h3>Integration layer</h3>
+        <div class="iface-card" id="IF-10">
+          <div class="id-col">
+            <span class="tag">IF-10</span>
+          </div>
+          <div class="body">
+            <h4>VTEX Account → Integration layer → Partners / Enterprise (E2–E7)</h4>
+            <p class="ref">Cross-cutting for IF-P* and IF-E3…E7. <strong>Not</strong> used by SSO (IF-E1) or DataLake (IF-E8). IF-11 removed.</p>
+            <div class="calls">
+              <span class="call call-out">→ mTLS client cert handshake</span>
+              <span class="call call-in">← mTLS server cert validation</span>
+              <span class="call call-out">→ GET / POST / webhooks</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="glossary">
+      <h2>Glossary</h2>
+      <dl class="glossary-grid">
+        <div class="term"><dt>IF-xx tag</dt><dd>Interface ID on the diagram; full VTEX mapping and calls are in the sections below.</dd></div>
+        <div class="term"><dt>mTLS</dt><dd>Mutual TLS on partner and enterprise integrations through the Integration layer.</dd></div>
+        <div class="term"><dt>Issuing a device</dt><dd>Device Protection pre-bind + Quotation and Price (Asurion).</dd></div>
+        <div class="term"><dt>Seller portal</dt><dd>MVP onboarding/orders for 3P sellers. Confirmed Aug 6: VTEX provides no seller network — AT&amp;T sources, reviews and accepts each seller directly (e.g. Samsung, Motorola); pricing/inventory/fulfillment stay with the seller.</dd></div>
+        <div class="term"><dt>DataLake direct</dt><dd>Left-column event path without Integration layer (IF-E8), same pattern as SSO. Confirmed Aug 6: feeds AT&amp;T's Snowflake instance via the VTEX Data Pipeline product (paid add-on, no VTEX-side egress charge).</dd></div>
+        <div class="term"><dt>AT&amp;T SSO direct</dt><dd>Left-column identity for Deep link / SSO connected to VTEX (IF-E1), not through the Integration layer.</dd></div>
+        <div class="term"><dt>VTEX CDN scope</dt><dd>CDN sits only above the VTEX Account stack (channels → core), not over external / side systems.</dd></div>
+      </dl>
+    </section>
+
+    <footer class="page-footer">
+      <strong>v2.12</strong> · VTEX Rebel Pink <strong>#F71963</strong>
+      · Diagram = boxes + tags · Details below = VTEX mapping + calls
+      · Updated Aug 12, 2026
+      · Prior local drafts: v1 · v2.6–v2.11
+    </footer>
+  </div>
+</body>
+</html>
