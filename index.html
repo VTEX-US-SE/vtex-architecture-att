@@ -165,8 +165,13 @@
       background: #EFF8FF;
       border-color: #B2DDFF;
     }
+    .phase-post {
+      color: #B54708;
+      background: #FFFAEB;
+      border-color: #FEDF89;
+    }
 
-    /* Full-box phase coloring (MVP green / North Star blue) */
+    /* Full-box phase coloring (MVP green / post-MVP amber / North Star blue) */
     .node-mvp {
       background: #ECFDF3 !important;
       border-color: #A6F4C5 !important;
@@ -179,6 +184,12 @@
     }
     .node-ns strong { color: #175CD3; }
     .node-ns .hint { color: #175CD3; opacity: 0.8; }
+    .node-post {
+      background: #FFFAEB !important;
+      border-color: #FEDF89 !important;
+    }
+    .node-post strong { color: #B54708; }
+    .node-post .hint { color: #B54708; opacity: 0.8; }
 
     .layer-label {
       font-size: 10px;
@@ -247,7 +258,7 @@
 
     .channels {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
       margin-bottom: 8px;
     }
@@ -381,6 +392,11 @@
     }
     .node-module strong { font-size: 11px; color: #fff; }
     .node-module .hint { color: rgba(255,255,255,0.8); font-size: 9.5px; }
+    .node-module.node-wallet {
+      background: #fff;
+      border-color: var(--vtex-pink);
+    }
+    .node-module.node-wallet strong { color: var(--ink); }
     .module-grid.stack {
       grid-template-columns: 1fr;
       grid-template-rows: repeat(2, 1fr);
@@ -551,7 +567,7 @@
     .enterprise-block { margin-top: 4px; }
     .enterprise-arrows {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       margin: 8px 0 6px;
     }
@@ -577,13 +593,52 @@
     }
     .enterprise-row {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       align-items: stretch;
     }
     .node-enterprise {
       background: var(--surface-alt);
       min-height: 72px;
+    }
+
+    .phase-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .phase-filters-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-right: 4px;
+    }
+    .phase-btn {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1.5px solid;
+      background: #fff;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+    .phase-btn-mvp { color: #027A48; border-color: #A6F4C5; }
+    .phase-btn-post { color: #B54708; border-color: #FEDF89; }
+    .phase-btn-ns { color: #175CD3; border-color: #B2DDFF; }
+    .phase-btn-mvp[aria-pressed="true"] { background: #ECFDF3; border-color: #027A48; }
+    .phase-btn-post[aria-pressed="true"] { background: #FFFAEB; border-color: #B54708; }
+    .phase-btn-ns[aria-pressed="true"] { background: #EFF8FF; border-color: #175CD3; }
+    .diagram-wrap[data-filter] [data-phases] { transition: opacity 0.2s ease; }
+    .diagram-wrap[data-filter="mvp"] [data-phases]:not([data-phases~="mvp"]),
+    .diagram-wrap[data-filter="post"] [data-phases]:not([data-phases~="post"]),
+    .diagram-wrap[data-filter="ns"] [data-phases]:not([data-phases~="ns"]) {
+      opacity: 0.28;
     }
 
     .legend {
@@ -606,6 +661,7 @@
     .swatch.channel { background: var(--channel); }
     .swatch.integ { background: var(--integ); border-color: var(--integ-border); }
     .swatch.mvp { background: #ECFDF3; border-color: #A6F4C5; }
+    .swatch.post { background: #FFFAEB; border-color: #FEDF89; }
     .swatch.ns { background: #EFF8FF; border-color: #B2DDFF; }
 
     /* —— Detail sections below —— */
@@ -794,19 +850,22 @@
         </div>
         <h1>AT&amp;T Connectivity Marketplace</h1>
         <p class="subtitle">
-          AT&amp;T Direct aligns with the VTEX Account. Boxes include MVP / North Star phase chips.
+          AT&amp;T Direct aligns with the VTEX Account. Boxes include MVP / post-MVP / North Star phase chips.
           FE surfaces use VTEX module styling. Call details below.
         </p>
       </div>
       <div class="meta-badge"><span>Platform</span>VTEX Account</div>
     </header>
 
-    <div class="version-note">
-      Updated Aug 11, 2026 after the Aug 6 onsite (VTEX Supplier Visit with Jeff Howard &amp; Sarah Day, plus the VTEX CSO security session). Key changes: FE stack confirmed (FastStore for MVP, headless for North Star); DataLake resolved to AT&amp;T Snowflake via VTEX Data Pipeline; seller model clarified (AT&amp;T curates its own sellers directly, orders auto-split); credit engine confirmed to live outside VTEX; in-line buy-flow sequencing clarified; and a TLS 1.3 compliance gap flagged (AT&amp;T deadline Dec 31, 2026, VTEX has no confirmed roadmap yet). Payment split / multi-seller settlement still needs a dedicated deep-dive before MVP build.
-    </div>
-
     <!-- ===================== DIAGRAM ===================== -->
     <div class="diagram-wrap">
+
+      <div class="phase-filters" role="group" aria-label="Highlight a phase">
+        <span class="phase-filters-label">Highlight</span>
+        <button type="button" class="phase-btn phase-btn-mvp" data-filter="mvp" aria-pressed="false">MVP</button>
+        <button type="button" class="phase-btn phase-btn-post" data-filter="post" aria-pressed="false">Post-MVP</button>
+        <button type="button" class="phase-btn phase-btn-ns" data-filter="ns" aria-pressed="false">North Star</button>
+      </div>
 
       <div class="main-grid">
 
@@ -814,26 +873,23 @@
         <div class="area-top">
           <div class="layer-label">Customer entry channels</div>
           <div class="channels">
-            <div class="node node-channel">
+            <div class="node node-channel" data-phases="ns">
               <strong>myAT&amp;T App</strong>
-              <span class="hint">Deep link / SSO</span>
             </div>
-            <div class="node node-channel">
+            <div class="node node-channel" data-phases="mvp ns">
               <strong>att.com</strong>
-              <span class="hint">Post-activation CTA</span>
-            </div>
-            <div class="node node-channel">
-              <strong>In-line Buy Flow</strong>
-              <span class="hint">connectivity first (AT&amp;T), device second (VTEX)</span>
+              <div class="phases">
+                <span class="phase phase-mvp">MVP</span>
+              </div>
             </div>
           </div>
           <div class="flow-down" aria-hidden="true">
             <div class="head-up"></div>
             <div class="shaft"></div>
             <div class="head"></div>
-            <span class="tag">IF-01…03</span>
+            <span class="tag">IF-01…02</span>
           </div>
-          <div class="cdn-bar">
+          <div class="cdn-bar" data-phases="mvp ns">
             VTEX CDN
             <span>Edge · caching · TLS · WAF — storefront / webview traffic only</span>
           </div>
@@ -849,17 +905,17 @@
         <aside class="area-direct">
           <div class="left-band">
             <div class="att-direct-box">
-              <div class="box-title">
+              <div class="box-title" data-phases="mvp ns">
                 AT&amp;T Direct
                 <span>no Integration layer</span>
               </div>
-              <div class="slot-sso">
+              <div class="slot-sso" data-phases="mvp">
                 <div class="node node-att-direct node-mvp">
                   <strong>AT&amp;T SSO</strong>
                   <span class="hint">Deep link / SSO</span>
                 </div>
               </div>
-              <div class="slot-datalake">
+              <div class="slot-datalake" data-phases="ns">
                 <div class="node node-att-direct node-ns">
                   <strong>DataLake</strong>
                   <span class="hint">AT&amp;T Snowflake via VTEX Data Pipeline</span>
@@ -868,13 +924,13 @@
             </div>
             <div class="direct-arrows" aria-hidden="true">
               <div class="title-spacer">AT&amp;T Direct</div>
-              <div class="slot-sso">
+              <div class="slot-sso" data-phases="mvp">
                 <div class="h-link to-right">
                   <span class="tag">IF-E1</span>
                   <div class="rail"></div>
                 </div>
               </div>
-              <div class="slot-datalake">
+              <div class="slot-datalake" data-phases="ns">
                 <div class="h-link to-right">
                   <span class="tag">IF-E8</span>
                   <div class="rail"></div>
@@ -890,7 +946,7 @@
             <div class="core-title">AT&amp;T Connectivity Marketplace — <em>VTEX Account</em></div>
 
             <div class="fe-row">
-              <div class="node node-module">
+              <div class="node node-module" data-phases="mvp ns">
                 <strong>Storefront</strong>
                 <span class="hint">marketplace.att.com</span>
                 <div class="phases">
@@ -898,7 +954,7 @@
                   <span class="phase phase-ns">Headless (AT&amp;T-owned FE)</span>
                 </div>
               </div>
-              <div class="node node-module">
+              <div class="node node-module" data-phases="ns">
                 <strong>VTEX CX Platform</strong>
                 <span class="hint">Conversational interface</span>
               </div>
@@ -906,34 +962,35 @@
 
             <div class="groups">
               <div class="group">
-                <div class="group-title">Digital Commerce</div>
+                <div class="group-title" data-phases="mvp ns">Digital Commerce</div>
                 <div class="module-grid">
-                  <div class="node node-module"><strong>Catalog</strong></div>
-                  <div class="node node-module"><strong>Pricing</strong></div>
-                  <div class="node node-module"><strong>Promotions</strong></div>
-                  <div class="node node-module"><strong>Channel Management</strong></div>
-                  <div class="node node-module"><strong>CMS</strong></div>
-                  <div class="node node-module"><strong>AI Search Engine</strong></div>
+                  <div class="node node-module" data-phases="mvp ns"><strong>Catalog</strong></div>
+                  <div class="node node-module" data-phases="mvp ns"><strong>Pricing</strong></div>
+                  <div class="node node-module" data-phases="mvp"><strong>Promotions</strong></div>
+                  <div class="node node-module" data-phases="mvp"><strong>Channel Management</strong></div>
+                  <div class="node node-module" data-phases="mvp"><strong>CMS</strong></div>
+                  <div class="node node-module" data-phases="mvp"><strong>AI Search Engine</strong></div>
+                  <div class="node node-module node-wallet" data-phases="mvp ns"><strong>Wallet</strong></div>
                 </div>
               </div>
               <div class="group">
-                <div class="group-title">Marketplace Management</div>
+                <div class="group-title" data-phases="ns">Marketplace Management</div>
                 <div class="module-grid stack">
-                  <div class="node node-module"><strong>Seller Management</strong></div>
-                  <div class="node node-module"><strong>Offer Management</strong></div>
+                  <div class="node node-module" data-phases="ns"><strong>Seller Management</strong></div>
+                  <div class="node node-module" data-phases="ns"><strong>Offer Management</strong></div>
                 </div>
               </div>
             </div>
 
             <div class="group full">
-              <div class="group-title">Transactional modules</div>
+              <div class="group-title" data-phases="mvp">Transactional modules</div>
               <div class="module-grid cols-6">
-                <div class="node node-module"><strong>Inventory</strong></div>
-                <div class="node node-module"><strong>Order Allocation</strong></div>
-                <div class="node node-module"><strong>Delivery Promise</strong></div>
-                <div class="node node-module"><strong>Logistics</strong></div>
-                <div class="node node-module"><strong>Checkout</strong></div>
-                <div class="node node-module"><strong>Payment Gateway</strong></div>
+                <div class="node node-module" data-phases="mvp"><strong>Inventory</strong></div>
+                <div class="node node-module" data-phases="mvp"><strong>Order Allocation</strong></div>
+                <div class="node node-module" data-phases="mvp"><strong>Delivery Promise</strong></div>
+                <div class="node node-module" data-phases="mvp"><strong>Logistics</strong></div>
+                <div class="node node-module" data-phases="mvp"><strong>Checkout</strong></div>
+                <div class="node node-module" data-phases="mvp"><strong>Payment Gateway</strong></div>
               </div>
             </div>
           </div>
@@ -942,7 +999,7 @@
         <!-- RIGHT: partners aligned with VTEX Account -->
         <aside class="area-partners side-col">
           <div class="layer-label">External partners</div>
-          <div class="partner-row">
+          <div class="partner-row" data-phases="post">
             <div class="h-link to-left" aria-hidden="true">
               <span class="tag">IF-P1</span>
               <div class="rail"></div>
@@ -950,11 +1007,11 @@
             <div class="node node-partner">
               <strong>Financing Providers</strong>
               <div class="phases">
-                <span class="phase phase-mvp">Affirm</span>
+                <span class="phase phase-post">Affirm</span>
               </div>
             </div>
           </div>
-          <div class="partner-row">
+          <div class="partner-row" data-phases="post">
             <div class="h-link to-left" aria-hidden="true">
               <span class="tag">IF-P2</span>
               <div class="rail"></div>
@@ -962,11 +1019,11 @@
             <div class="node node-partner">
               <strong>Trade-in Partners</strong>
               <div class="phases">
-                <span class="phase phase-ns">Assurant</span>
+                <span class="phase phase-post">Assurant</span>
               </div>
             </div>
           </div>
-          <div class="partner-row">
+          <div class="partner-row" data-phases="post">
             <div class="h-link to-left" aria-hidden="true">
               <span class="tag">IF-P3</span>
               <div class="rail"></div>
@@ -974,11 +1031,11 @@
             <div class="node node-partner">
               <strong>Device Protection</strong>
               <div class="phases">
-                <span class="phase phase-mvp">Asurion</span>
+                <span class="phase phase-post">Asurion</span>
               </div>
             </div>
           </div>
-          <div class="partner-row">
+          <div class="partner-row" data-phases="ns">
             <div class="h-link to-left" aria-hidden="true">
               <span class="tag">IF-P4</span>
               <div class="rail"></div>
@@ -991,7 +1048,7 @@
               </div>
             </div>
           </div>
-          <div class="partner-row">
+          <div class="partner-row" data-phases="mvp ns">
             <div class="h-link to-left" aria-hidden="true">
               <span class="tag">IF-P5</span>
               <div class="rail"></div>
@@ -1004,7 +1061,7 @@
               </div>
             </div>
           </div>
-          <div class="partner-row">
+          <div class="partner-row" data-phases="mvp ns">
             <div class="h-link to-left" aria-hidden="true">
               <span class="tag">IF-P6</span>
               <div class="rail"></div>
@@ -1034,32 +1091,28 @@
           <div class="enterprise-block">
             <div class="layer-label">AT&amp;T Enterprise Systems <span style="text-transform:none;letter-spacing:0;font-weight:500;">(via Integration layer)</span></div>
             <div class="enterprise-arrows" aria-hidden="true">
-              <div class="ent-arrow"><span class="tag">IF-E3</span><div class="shaft"></div><div class="head"></div></div>
-              <div class="ent-arrow"><span class="tag">IF-E4</span><div class="shaft"></div><div class="head"></div></div>
-              <div class="ent-arrow"><span class="tag">IF-E5</span><div class="shaft"></div><div class="head"></div></div>
-              <div class="ent-arrow"><span class="tag">IF-E6</span><div class="shaft"></div><div class="head"></div></div>
-              <div class="ent-arrow"><span class="tag">IF-E7</span><div class="shaft"></div><div class="head"></div></div>
+              <div class="ent-arrow" data-phases="mvp"><span class="tag">IF-E3</span><div class="shaft"></div><div class="head"></div></div>
+              <div class="ent-arrow" data-phases="post"><span class="tag">IF-E4</span><div class="shaft"></div><div class="head"></div></div>
+              <div class="ent-arrow" data-phases="post"><span class="tag">IF-E7</span><div class="shaft"></div><div class="head"></div></div>
+              <div class="ent-arrow" data-phases="mvp ns"><span class="tag">IF-E5</span><div class="shaft"></div><div class="head"></div></div>
             </div>
             <div class="enterprise-wrap">
               <div class="enterprise-row">
-                <div class="node node-enterprise node-mvp">
+                <div class="node node-enterprise node-mvp" data-phases="mvp">
                   <strong>AT&amp;T OSS</strong>
                   <span class="hint">issuing / retrieving credits</span>
                 </div>
-                <div class="node node-enterprise node-ns">
+                <div class="node node-enterprise node-post" data-phases="post">
                   <strong>Loyalty Platform</strong>
                 </div>
-                <div class="node node-enterprise node-ns">
+                <div class="node node-enterprise node-post" data-phases="post">
+                  <strong>Adobe Analytics &amp; Target</strong>
+                </div>
+                <div class="node node-enterprise node-ns" data-phases="mvp ns">
                   <strong>Fraud CTX</strong>
                   <div class="phases">
                     <span class="phase phase-mvp">Braintree</span>
                   </div>
-                </div>
-                <div class="node node-enterprise node-ns">
-                  <strong>Billing API</strong>
-                </div>
-                <div class="node node-enterprise node-ns">
-                  <strong>Adobe Analytics &amp; Target</strong>
                 </div>
               </div>
             </div>
@@ -1073,6 +1126,7 @@
         <div class="legend-item"><span class="swatch pink"></span> VTEX CDN / modules (CDN over core only)</div>
         <div class="legend-item"><span class="swatch integ"></span> Integration layer</div>
         <div class="legend-item"><span class="swatch mvp"></span> MVP Phase</div>
+        <div class="legend-item"><span class="swatch post"></span> post-MVP</div>
         <div class="legend-item"><span class="swatch ns"></span> North Star Phase</div>
         <div class="legend-item"><span class="chip-mtls">mTLS</span> Integration-layer traffic</div>
         <div class="legend-item">↕ Bidirectional (request + response)</div>
@@ -1112,22 +1166,8 @@
             <h4>att.com → Storefront</h4>
             <p class="ref">VTEX: <strong>Storefront</strong> (marketplace.att.com)</p>
             <div class="calls">
-              <span class="call call-out">→ Post-activation CTA redirect</span>
               <span class="call call-out">→ Account / line context</span>
               <span class="call call-in">← Storefront page</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="iface-card" id="IF-03">
-          <div class="id-col"><span class="tag">IF-03</span></div>
-          <div class="body">
-            <h4>In-line Buy Flow → Checkout</h4>
-            <p class="ref">VTEX: <strong>Checkout</strong> (Transactional) · Channel Management</p>
-            <div class="calls">
-              <span class="call call-out">→ New activation context</span>
-              <span class="call call-out">→ Plan / device intent</span>
-              <span class="call call-in">← In-line checkout</span>
             </div>
           </div>
         </div>
@@ -1163,6 +1203,7 @@
               <span class="call call-in">← Approval / decline + APR / term</span>
               <span class="call call-in">← Finance contract ID</span>
               <span class="call call-out">POST → Bind contract to order</span>
+              <span class="call call-note">post-MVP</span>
             </div>
           </div>
         </div>
@@ -1180,6 +1221,7 @@
               <span class="call call-in">← Quote $ + expiry</span>
               <span class="call call-in">← Shipping label / kit</span>
               <span class="call call-out">POST → Accept quote / order ID</span>
+              <span class="call call-note">post-MVP</span>
             </div>
           </div>
         </div>
@@ -1199,6 +1241,7 @@
               <span class="call call-in">← Eligible plans + premium</span>
               <span class="call call-out">POST → Bind policy on order</span>
               <span class="call call-in">← Policy confirmation</span>
+              <span class="call call-note">post-MVP</span>
             </div>
           </div>
         </div>
@@ -1324,7 +1367,7 @@
             <span class="chip-mtls">mTLS</span>
           </div>
           <div class="body">
-            <h4>AT&amp;T Loyalty Platform — North Star</h4>
+            <h4>AT&amp;T Loyalty Platform — post-MVP</h4>
             <p class="ref">VTEX: <strong>Checkout</strong> · <strong>Promotions</strong></p>
             <div class="calls">
               <span class="call call-out">GET → Member / balance / tier</span>
@@ -1350,23 +1393,6 @@
           </div>
         </div>
 
-        <div class="iface-card" id="IF-E6">
-          <div class="id-col">
-            <span class="tag">IF-E6</span>
-            <span class="chip-mtls">mTLS</span>
-          </div>
-          <div class="body">
-            <h4>AT&amp;T Billing API</h4>
-            <p class="ref">VTEX: <strong>Checkout</strong> · <strong>Payment Gateway</strong> · Orders</p>
-            <div class="calls">
-              <span class="call call-out">POST → Charge to BAN / line (pay on bill)</span>
-              <span class="call call-out">POST → Adjust / credit</span>
-              <span class="call call-in">← Billing ACK / invoice ref</span>
-              <span class="call call-note">Confirm pay-on-bill capability</span>
-            </div>
-          </div>
-        </div>
-
         <div class="iface-card" id="IF-E7">
           <div class="id-col">
             <span class="tag">IF-E7</span>
@@ -1378,6 +1404,7 @@
             <div class="calls">
               <span class="call call-out">POST → Page / cart / order events</span>
               <span class="call call-in">← Target experiences / A/B</span>
+              <span class="call call-note">post-MVP</span>
             </div>
           </div>
         </div>
@@ -1391,8 +1418,8 @@
             <span class="tag">IF-10</span>
           </div>
           <div class="body">
-            <h4>VTEX Account → Integration layer → Partners / Enterprise (E2–E7)</h4>
-            <p class="ref">Cross-cutting for IF-P* and IF-E3…E7. <strong>Not</strong> used by SSO (IF-E1) or DataLake (IF-E8). IF-11 removed.</p>
+            <h4>VTEX Account → Integration layer → Partners / Enterprise</h4>
+            <p class="ref">Cross-cutting for IF-P* and IF-E3, IF-E4, IF-E5, IF-E7. <strong>Not</strong> used by SSO (IF-E1) or DataLake (IF-E8). IF-11 removed.</p>
             <div class="calls">
               <span class="call call-out">→ mTLS client cert handshake</span>
               <span class="call call-in">← mTLS server cert validation</span>
@@ -1423,5 +1450,23 @@
       · Prior local drafts: v1 · v2.6–v2.11
     </footer>
   </div>
+  <script>
+    (function () {
+      var wrap = document.querySelector(".diagram-wrap");
+      var buttons = wrap.querySelectorAll(".phase-btn");
+      buttons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var filter = btn.getAttribute("data-filter");
+          var active = wrap.getAttribute("data-filter") === filter;
+          buttons.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+          if (active) wrap.removeAttribute("data-filter");
+          else {
+            wrap.setAttribute("data-filter", filter);
+            btn.setAttribute("aria-pressed", "true");
+          }
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
