@@ -525,9 +525,9 @@
       opacity: 0.28;
     }
     .diagram-wrap[data-filter] .phase { transition: opacity 0.2s ease; }
-    .diagram-wrap[data-filter="mvp"] [data-phases~="mvp"] .phase:not(.phase-mvp),
-    .diagram-wrap[data-filter="post"] [data-phases~="post"] .phase:not(.phase-post),
-    .diagram-wrap[data-filter="ns"] [data-phases~="ns"] .phase:not(.phase-ns) {
+    .diagram-wrap[data-filter="mvp"] [data-phases~="mvp"] .phase:not(.phase-mvp):not([data-chip-phases~="mvp"]),
+    .diagram-wrap[data-filter="post"] [data-phases~="post"] .phase:not(.phase-post):not([data-chip-phases~="post"]),
+    .diagram-wrap[data-filter="ns"] [data-phases~="ns"] .phase:not(.phase-ns):not([data-chip-phases~="ns"]) {
       opacity: 0.28;
     }
 
@@ -667,7 +667,7 @@
                 <strong>Storefront</strong>
                 <span class="hint">marketplace.att.com</span>
                 <div class="phases">
-                  <span class="phase phase-mvp">FastStore</span>
+                  <span class="phase phase-mvp" data-chip-phases="post">FastStore</span>
                   <span class="phase phase-ns">Headless (AT&amp;T-owned FE)</span>
                 </div>
               </div>
