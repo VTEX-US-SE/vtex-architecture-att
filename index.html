@@ -524,6 +524,12 @@
     .diagram-wrap[data-filter="ns"] [data-phases]:not([data-phases~="ns"]) {
       opacity: 0.28;
     }
+    .diagram-wrap[data-filter] .phase { transition: opacity 0.2s ease; }
+    .diagram-wrap[data-filter="mvp"] [data-phases~="mvp"] .phase:not(.phase-mvp),
+    .diagram-wrap[data-filter="post"] [data-phases~="post"] .phase:not(.phase-post),
+    .diagram-wrap[data-filter="ns"] [data-phases~="ns"] .phase:not(.phase-ns) {
+      opacity: 0.28;
+    }
 
     .legend {
       display: flex;
@@ -624,7 +630,7 @@
               </div>
             </div>
           </div>
-          <div class="cdn-bar" data-phases="mvp ns">
+          <div class="cdn-bar" data-phases="mvp">
             VTEX CDN
             <span>Edge · caching · TLS · WAF — storefront / webview traffic only</span>
           </div>
@@ -660,7 +666,7 @@
             <div class="core-title">AT&amp;T Connectivity Marketplace — <em>VTEX Account</em></div>
 
             <div class="fe-row">
-              <div class="node node-module" data-phases="mvp ns">
+              <div class="node node-module" data-phases="mvp post">
                 <strong>Storefront</strong>
                 <span class="hint">marketplace.att.com</span>
                 <div class="phases">
