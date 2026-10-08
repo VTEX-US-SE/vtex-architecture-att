@@ -33,7 +33,7 @@
       --integ-border: #B8C7D9;
       --in: #027A48;
       --out: #B54708;
-      --shadow: 0 1px 2px rgba(20, 32, 50, 0.06), 0 4px 12px rgba(20, 32, 50, 0.04);
+      --shadow: 0 1px 2px rgba(20, 32, 50, 0.04), 0 8px 24px rgba(20, 32, 50, 0.06);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -84,7 +84,7 @@
       font-size: 12px;
       font-weight: 600;
       padding: 8px 14px;
-      border-radius: 8px;
+      border-radius: 12px;
       text-align: center;
     }
     .meta-badge span {
@@ -111,8 +111,8 @@
     /* —— Shared —— */
     .node {
       background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
       padding: 10px 12px;
       text-align: center;
       box-shadow: var(--shadow);
@@ -151,7 +151,7 @@
       font-weight: 700;
       letter-spacing: 0.02em;
       padding: 3px 8px;
-      border-radius: 4px;
+      border-radius: 999px;
       border: 1px solid;
       line-height: 1.2;
     }
@@ -215,7 +215,7 @@
     .diagram-wrap {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 20px;
       padding: 28px 24px 32px;
       box-shadow: var(--shadow);
     }
@@ -225,11 +225,19 @@
       display: grid;
       grid-template-columns: 290px minmax(0, 1fr) 280px;
       grid-template-areas:
-        ".       top      ."
-        "direct  core     partners"
-        ".       below    .";
+        ".        top      ."
+        "account  account  partners"
+        ".        below    .";
       gap: 10px 12px;
       align-items: start;
+    }
+    .account-row {
+      grid-area: account;
+      align-self: start;
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
     }
     .area-top {
       grid-area: top;
@@ -237,8 +245,12 @@
       flex-direction: column;
       gap: 12px;
     }
-    .area-direct { grid-area: direct; align-self: stretch; }
-    .area-core { grid-area: core; }
+    .area-direct {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+    .area-core { min-height: 100%; }
     .area-partners { grid-area: partners; align-self: start; }
     .area-below { grid-area: below; }
 
@@ -271,8 +283,8 @@
       font-size: 15px;
       letter-spacing: 0.04em;
       padding: 14px 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 14px rgba(247, 25, 99, 0.35);
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(247, 25, 99, 0.22);
       width: 100%;
     }
     .cdn-bar span {
@@ -287,7 +299,7 @@
     .core {
       background: var(--surface-alt);
       border: 1.5px solid var(--vtex-pink-border);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -320,7 +332,7 @@
     .group {
       background: var(--surface);
       border: 1.5px solid var(--vtex-pink-border);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 10px;
       display: flex;
       flex-direction: column;
@@ -384,17 +396,22 @@
 
     /* Left: AT&T Direct container */
     .left-band {
-      height: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
     }
     .att-direct-box {
       background: var(--surface);
       border: 1.5px solid var(--border);
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 12px 10px 14px;
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
-      height: 100%;
+      flex: 1;
+      height: auto;
+      min-height: 100%;
       box-sizing: border-box;
     }
     .att-direct-box .box-title {
@@ -420,7 +437,7 @@
       margin-top: 2px;
     }
     .slot-sso { margin-top: 8px; }
-    .slot-datalake { margin-top: auto; margin-bottom: 18%; }
+    .slot-datalake { margin-top: auto; }
     .area-direct .left-band { min-height: 100%; }
 
     .node-partner { width: 100%; border-color: var(--border-strong); }
@@ -428,7 +445,7 @@
       width: 100%;
       background: var(--surface-alt);
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px 12px;
       text-align: center;
       box-shadow: var(--shadow);
@@ -457,7 +474,7 @@
       margin-top: 4px;
       background: var(--integ);
       border: 1.5px solid var(--integ-border);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 12px 16px;
       display: flex;
       align-items: center;
@@ -472,12 +489,12 @@
     .enterprise-wrap {
       background: var(--surface);
       border: 1.5px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 12px 10px;
     }
     .enterprise-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 8px;
       align-items: stretch;
     }
@@ -505,13 +522,14 @@
       font-family: inherit;
       font-size: 13px;
       font-weight: 700;
-      padding: 7px 14px;
-      border-radius: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
       border: 1.5px solid;
       background: #fff;
       cursor: pointer;
       line-height: 1.2;
     }
+    .phase-btn:hover { filter: brightness(0.97); }
     .phase-btn-mvp { color: #027A48; border-color: #A6F4C5; }
     .phase-btn-post { color: #B54708; border-color: #FEDF89; }
     .phase-btn-ns { color: #175CD3; border-color: #B2DDFF; }
@@ -528,6 +546,19 @@
     .diagram-wrap[data-filter="mvp"] [data-phases~="mvp"] .phase:not(.phase-mvp):not([data-chip-phases~="mvp"]),
     .diagram-wrap[data-filter="post"] [data-phases~="post"] .phase:not(.phase-post):not([data-chip-phases~="post"]),
     .diagram-wrap[data-filter="ns"] [data-phases~="ns"] .phase:not(.phase-ns):not([data-chip-phases~="ns"]) {
+      opacity: 0.28;
+    }
+    /* North Star chip inside a box that is not itself North Star stays solid; the box does not. */
+    .diagram-wrap[data-filter="ns"] .node-module[data-phases]:not([data-phases~="ns"]):has([data-chip-phases~="ns"]) {
+      opacity: 1;
+      background: color-mix(in srgb, var(--vtex-pink) 28%, var(--surface-alt));
+      border-color: color-mix(in srgb, var(--vtex-pink-dark) 28%, var(--surface-alt));
+    }
+    .diagram-wrap[data-filter="ns"] .node-module[data-phases]:not([data-phases~="ns"]):has([data-chip-phases~="ns"]) > strong,
+    .diagram-wrap[data-filter="ns"] .node-module[data-phases]:not([data-phases~="ns"]):has([data-chip-phases~="ns"]) > .hint {
+      opacity: 0.55;
+    }
+    .diagram-wrap[data-filter="ns"] .fe-row .phase-mvp {
       opacity: 0.28;
     }
 
@@ -567,12 +598,14 @@
         grid-template-columns: 1fr;
         grid-template-areas:
           "top"
-          "direct"
-          "core"
+          "account"
           "partners"
           "below";
       }
-      .att-direct-box { min-height: 0; height: auto; }
+      .account-row { grid-template-columns: 1fr; }
+      .area-direct { display: block; min-height: 0; }
+      .left-band { flex: none; min-height: 0; }
+      .att-direct-box { min-height: 0; height: auto; flex: none; }
       .slot-sso, .slot-datalake { margin-top: 12px; margin-bottom: 0; }
       .enterprise-row { grid-template-columns: repeat(2, 1fr); }
       .fe-row, .groups, .channels { grid-template-columns: 1fr; }
@@ -623,21 +656,22 @@
             <div class="node node-channel" data-phases="ns">
               <strong>myAT&amp;T App</strong>
             </div>
-            <div class="node node-channel" data-phases="mvp ns">
+            <div class="node node-channel" data-phases="ns">
               <strong>att.com</strong>
             </div>
           </div>
-          <div class="cdn-bar" data-phases="mvp">
+          <div class="cdn-bar" data-phases="mvp post">
             VTEX CDN
             <span>Edge · caching · TLS · WAF — storefront / webview traffic only</span>
           </div>
         </div>
 
+        <div class="account-row">
         <!-- LEFT: AT&T Direct @ same height as VTEX Account; arrows outside -->
         <aside class="area-direct">
           <div class="left-band">
             <div class="att-direct-box">
-              <div class="box-title" data-phases="mvp ns">
+              <div class="box-title" data-phases="mvp">
                 AT&amp;T Direct
                 <span>no Integration layer</span>
               </div>
@@ -647,9 +681,9 @@
                   <span class="hint">Deep link / SSO</span>
                 </div>
               </div>
-              <div class="slot-datalake" data-phases="ns">
-                <div class="node node-att-direct node-ns">
-                  <strong>DataLake</strong>
+              <div class="slot-datalake" data-phases="mvp">
+                <div class="node node-att-direct node-mvp">
+                  <strong>Data Pipeline</strong>
                   <span class="hint">AT&amp;T Snowflake via VTEX Data Pipeline</span>
                 </div>
               </div>
@@ -665,10 +699,9 @@
             <div class="fe-row">
               <div class="node node-module" data-phases="mvp post">
                 <strong>Storefront</strong>
-                <span class="hint">marketplace.att.com</span>
                 <div class="phases">
                   <span class="phase phase-mvp" data-chip-phases="post">FastStore</span>
-                  <span class="phase phase-ns">Headless (AT&amp;T-owned FE)</span>
+                  <span class="phase phase-ns" data-chip-phases="ns">Headless Frontend</span>
                 </div>
               </div>
               <div class="node node-module" data-phases="ns">
@@ -684,7 +717,6 @@
                   <div class="node node-module" data-phases="mvp ns"><strong>Catalog</strong></div>
                   <div class="node node-module" data-phases="mvp ns"><strong>Pricing</strong></div>
                   <div class="node node-module" data-phases="mvp"><strong>Promotions</strong></div>
-                  <div class="node node-module" data-phases="mvp"><strong>Channel Management</strong></div>
                   <div class="node node-module" data-phases="mvp"><strong>CMS</strong></div>
                   <div class="node node-module" data-phases="mvp"><strong>AI Search Engine</strong></div>
                   <div class="node node-module node-wallet" data-phases="mvp ns"><strong>Wallet</strong></div>
@@ -712,15 +744,16 @@
             </div>
           </div>
         </div>
+        </div>
 
         <!-- RIGHT: partners aligned with VTEX Account -->
         <aside class="area-partners side-col">
           <div class="layer-label">External partners</div>
-          <div class="partner-row" data-phases="post">
+          <div class="partner-row" data-phases="mvp">
             <div class="node node-partner">
               <strong>Financing Providers</strong>
               <div class="phases">
-                <span class="phase phase-post">Affirm</span>
+                <span class="phase phase-mvp">Affirm</span>
               </div>
             </div>
           </div>
@@ -732,11 +765,11 @@
               </div>
             </div>
           </div>
-          <div class="partner-row" data-phases="post">
+          <div class="partner-row" data-phases="mvp">
             <div class="node node-partner">
               <strong>Device Protection</strong>
               <div class="phases">
-                <span class="phase phase-post">Asurion</span>
+                <span class="phase phase-mvp">Asurion</span>
               </div>
             </div>
           </div>
@@ -749,21 +782,20 @@
               </div>
             </div>
           </div>
+          <div class="partner-row" data-phases="mvp">
+            <div class="node node-partner">
+              <strong>Fraud</strong>
+              <div class="phases">
+                <span class="phase phase-mvp">Braintree</span>
+              </div>
+            </div>
+          </div>
           <div class="partner-row" data-phases="mvp ns">
             <div class="node node-partner">
               <strong>Payment Processors</strong>
               <div class="phases">
                 <span class="phase phase-mvp">Braintree</span>
                 <span class="phase phase-ns">Fiserv</span>
-              </div>
-            </div>
-          </div>
-          <div class="partner-row" data-phases="mvp ns">
-            <div class="node node-partner">
-              <strong>Logistics / 3PL</strong>
-              <div class="phases">
-                <span class="phase phase-mvp">WMS</span>
-                <span class="phase phase-ns">External</span>
               </div>
             </div>
           </div>
@@ -774,7 +806,7 @@
           <div class="integ-bar">
             <strong>Integration layer</strong>
             <span class="chip-mtls">mTLS</span>
-            <span class="hint">NewSoft</span>
+            <span class="hint">MuleSoft</span>
           </div>
           <div class="enterprise-block">
             <div class="layer-label">AT&amp;T Enterprise Systems <span style="text-transform:none;letter-spacing:0;font-weight:500;">(via Integration layer)</span></div>
@@ -782,19 +814,19 @@
               <div class="enterprise-row">
                 <div class="node node-enterprise node-mvp" data-phases="mvp">
                   <strong>AT&amp;T OSS</strong>
-                  <span class="hint">issuing / retrieving credits</span>
+                </div>
+                <div class="node node-enterprise node-mvp" data-phases="mvp">
+                  <strong>Return Management</strong>
+                </div>
+                <div class="node node-enterprise node-mvp" data-phases="mvp">
+                  <strong>Credit Service</strong>
+                  <span class="hint">Upstream of Wallet</span>
                 </div>
                 <div class="node node-enterprise node-post" data-phases="post">
                   <strong>Loyalty Platform</strong>
                 </div>
                 <div class="node node-enterprise node-post" data-phases="post">
                   <strong>Adobe Analytics &amp; Target</strong>
-                </div>
-                <div class="node node-enterprise node-ns" data-phases="mvp ns">
-                  <strong>Fraud CTX</strong>
-                  <div class="phases">
-                    <span class="phase phase-mvp">Braintree</span>
-                  </div>
                 </div>
               </div>
             </div>
