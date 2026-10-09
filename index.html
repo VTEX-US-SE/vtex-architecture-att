@@ -165,13 +165,8 @@
       background: #EFF8FF;
       border-color: #B2DDFF;
     }
-    .phase-post {
-      color: #B54708;
-      background: #FFFAEB;
-      border-color: #FEDF89;
-    }
 
-    /* Full-box phase coloring (MVP green / post-MVP amber / North Star blue) */
+    /* Full-box phase coloring (MVP green / North Star blue) */
     .node-mvp {
       background: #ECFDF3 !important;
       border-color: #A6F4C5 !important;
@@ -184,12 +179,6 @@
     }
     .node-ns strong { color: #175CD3; }
     .node-ns .hint { color: #175CD3; opacity: 0.8; }
-    .node-post {
-      background: #FFFAEB !important;
-      border-color: #FEDF89 !important;
-    }
-    .node-post strong { color: #B54708; }
-    .node-post .hint { color: #B54708; opacity: 0.8; }
 
     .layer-label {
       font-size: 10px;
@@ -531,20 +520,16 @@
     }
     .phase-btn:hover { filter: brightness(0.97); }
     .phase-btn-mvp { color: #027A48; border-color: #A6F4C5; }
-    .phase-btn-post { color: #B54708; border-color: #FEDF89; }
     .phase-btn-ns { color: #175CD3; border-color: #B2DDFF; }
     .phase-btn-mvp[aria-pressed="true"] { background: #ECFDF3; border-color: #027A48; }
-    .phase-btn-post[aria-pressed="true"] { background: #FFFAEB; border-color: #B54708; }
     .phase-btn-ns[aria-pressed="true"] { background: #EFF8FF; border-color: #175CD3; }
     .diagram-wrap[data-filter] [data-phases] { transition: opacity 0.2s ease; }
     .diagram-wrap[data-filter="mvp"] [data-phases]:not([data-phases~="mvp"]),
-    .diagram-wrap[data-filter="post"] [data-phases]:not([data-phases~="post"]),
     .diagram-wrap[data-filter="ns"] [data-phases]:not([data-phases~="ns"]) {
       opacity: 0.28;
     }
     .diagram-wrap[data-filter] .phase { transition: opacity 0.2s ease; }
     .diagram-wrap[data-filter="mvp"] [data-phases~="mvp"] .phase:not(.phase-mvp):not([data-chip-phases~="mvp"]),
-    .diagram-wrap[data-filter="post"] [data-phases~="post"] .phase:not(.phase-post):not([data-chip-phases~="post"]),
     .diagram-wrap[data-filter="ns"] [data-phases~="ns"] .phase:not(.phase-ns):not([data-chip-phases~="ns"]) {
       opacity: 0.28;
     }
@@ -558,10 +543,6 @@
     .diagram-wrap[data-filter="ns"] .node-module[data-phases]:not([data-phases~="ns"]):has([data-chip-phases~="ns"]) > .hint {
       opacity: 0.55;
     }
-    .diagram-wrap[data-filter="ns"] .fe-row .phase-mvp {
-      opacity: 0.28;
-    }
-
     .legend {
       display: flex;
       flex-wrap: wrap;
@@ -582,7 +563,6 @@
     .swatch.channel { background: var(--channel); }
     .swatch.integ { background: var(--integ); border-color: var(--integ-border); }
     .swatch.mvp { background: #ECFDF3; border-color: #A6F4C5; }
-    .swatch.post { background: #FFFAEB; border-color: #FEDF89; }
     .swatch.ns { background: #EFF8FF; border-color: #B2DDFF; }
 
     footer.page-footer {
@@ -630,7 +610,7 @@
         </div>
         <h1>AT&amp;T Connectivity Marketplace</h1>
         <p class="subtitle">
-          AT&amp;T Direct aligns with the VTEX Account. Boxes include MVP / post-MVP / North Star phase chips.
+          AT&amp;T Direct aligns with the VTEX Account. Boxes include MVP / North Star phase chips.
           FE surfaces use VTEX module styling.
         </p>
       </div>
@@ -643,7 +623,6 @@
       <div class="phase-filters" role="group" aria-label="Highlight a phase">
         <span class="phase-filters-label">Highlight</span>
         <button type="button" class="phase-btn phase-btn-mvp" data-filter="mvp" aria-pressed="false">MVP</button>
-        <button type="button" class="phase-btn phase-btn-post" data-filter="post" aria-pressed="false">Post-MVP</button>
         <button type="button" class="phase-btn phase-btn-ns" data-filter="ns" aria-pressed="false">North Star</button>
       </div>
 
@@ -660,7 +639,7 @@
               <strong>att.com</strong>
             </div>
           </div>
-          <div class="cdn-bar" data-phases="mvp post">
+          <div class="cdn-bar" data-phases="mvp">
             VTEX CDN
             <span>Edge · caching · TLS · WAF — storefront / webview traffic only</span>
           </div>
@@ -697,11 +676,11 @@
             <div class="core-title">AT&amp;T Connectivity Marketplace — <em>VTEX Account</em></div>
 
             <div class="fe-row">
-              <div class="node node-module" data-phases="mvp post">
+              <div class="node node-module" data-phases="mvp">
                 <strong>Storefront</strong>
                 <div class="phases">
-                  <span class="phase phase-mvp" data-chip-phases="post">FastStore</span>
-                  <span class="phase phase-ns" data-chip-phases="ns">Headless Frontend</span>
+                  <span class="phase phase-mvp">FastStore</span>
+                  <span class="phase phase-ns">Headless Frontend</span>
                 </div>
               </div>
               <div class="node node-module" data-phases="ns">
@@ -757,11 +736,11 @@
               </div>
             </div>
           </div>
-          <div class="partner-row" data-phases="post">
+          <div class="partner-row" data-phases="ns">
             <div class="node node-partner">
               <strong>Trade-in Partners</strong>
               <div class="phases">
-                <span class="phase phase-post">Assurant</span>
+                <span class="phase phase-ns">Assurant</span>
               </div>
             </div>
           </div>
@@ -822,10 +801,10 @@
                   <strong>Credit Service</strong>
                   <span class="hint">Upstream of Wallet</span>
                 </div>
-                <div class="node node-enterprise node-post" data-phases="post">
+                <div class="node node-enterprise node-ns" data-phases="ns">
                   <strong>Loyalty Platform</strong>
                 </div>
-                <div class="node node-enterprise node-post" data-phases="post">
+                <div class="node node-enterprise node-ns" data-phases="ns">
                   <strong>Adobe Analytics &amp; Target</strong>
                 </div>
               </div>
@@ -840,7 +819,6 @@
         <div class="legend-item"><span class="swatch pink"></span> VTEX CDN / modules (CDN over core only)</div>
         <div class="legend-item"><span class="swatch integ"></span> Integration layer</div>
         <div class="legend-item"><span class="swatch mvp"></span> MVP Phase</div>
-        <div class="legend-item"><span class="swatch post"></span> post-MVP</div>
         <div class="legend-item"><span class="swatch ns"></span> North Star Phase</div>
         <div class="legend-item"><span class="chip-mtls">mTLS</span> Integration-layer traffic</div>
       </div>
