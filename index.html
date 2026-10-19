@@ -357,11 +357,6 @@
     }
     .node-module strong { font-size: 11px; color: #fff; }
     .node-module .hint { color: rgba(255,255,255,0.8); font-size: 9.5px; }
-    .node-module.node-wallet {
-      background: #fff;
-      border-color: var(--vtex-pink);
-    }
-    .node-module.node-wallet strong { color: var(--ink); }
     .module-grid.stack {
       grid-template-columns: 1fr;
       grid-template-rows: repeat(2, 1fr);
@@ -483,7 +478,7 @@
     }
     .enterprise-row {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       align-items: stretch;
     }
@@ -521,8 +516,13 @@
     .phase-btn:hover { filter: brightness(0.97); }
     .phase-btn-mvp { color: #027A48; border-color: #A6F4C5; }
     .phase-btn-ns { color: #175CD3; border-color: #B2DDFF; }
+    .phase-btn-wallet { color: var(--vtex-pink-dark); border-color: var(--vtex-pink-border); }
     .phase-btn-mvp[aria-pressed="true"] { background: #ECFDF3; border-color: #027A48; }
     .phase-btn-ns[aria-pressed="true"] { background: #EFF8FF; border-color: #175CD3; }
+    .phase-btn-wallet[aria-pressed="true"] {
+      background: var(--vtex-pink-muted);
+      border-color: var(--vtex-pink);
+    }
     .diagram-wrap[data-filter] [data-phases] { transition: opacity 0.2s ease; }
     .diagram-wrap[data-filter="mvp"] [data-phases]:not([data-phases~="mvp"]),
     .diagram-wrap[data-filter="ns"] [data-phases]:not([data-phases~="ns"]) {
@@ -542,6 +542,150 @@
     .diagram-wrap[data-filter="ns"] .node-module[data-phases]:not([data-phases~="ns"]):has([data-chip-phases~="ns"]) > strong,
     .diagram-wrap[data-filter="ns"] .node-module[data-phases]:not([data-phases~="ns"]):has([data-chip-phases~="ns"]) > .hint {
       opacity: 0.55;
+    }
+
+    /* —— Wallet focus —— */
+    .diagram-wrap { position: relative; }
+    .wallet-trigger {
+      cursor: pointer;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    }
+    .wallet-trigger:hover {
+      border-color: var(--vtex-pink);
+      box-shadow: 0 0 0 3px rgba(247, 25, 99, 0.12);
+    }
+    .wallet-trigger:focus-visible {
+      outline: 2px solid var(--vtex-pink);
+      outline-offset: 2px;
+    }
+    .diagram-wrap[data-filter="wallet"] .wallet-trigger {
+      border-color: var(--border-strong);
+      background: var(--surface-alt);
+      box-shadow: none;
+    }
+    .diagram-wrap[data-filter="wallet"] .wallet-trigger > strong {
+      color: var(--ink);
+    }
+    .diagram-wrap[data-filter="wallet"] .node:not(.wallet-trigger),
+    .diagram-wrap[data-filter="wallet"] .group-title,
+    .diagram-wrap[data-filter="wallet"] .box-title,
+    .diagram-wrap[data-filter="wallet"] .cdn-bar,
+    .diagram-wrap[data-filter="wallet"] .integ-bar,
+    .diagram-wrap[data-filter="wallet"] .layer-label {
+      opacity: 0.22;
+      transition: opacity 0.2s ease;
+    }
+    .diagram-wrap[data-filter="wallet"] [data-wallet],
+    .diagram-wrap[data-filter="wallet"] [data-wallet] .node,
+    .diagram-wrap[data-filter="wallet"] .wallet-lit {
+      opacity: 1 !important;
+    }
+    .diagram-wrap[data-filter="wallet"] { overflow-x: auto; }
+    .wallet-details { display: none; }
+    .diagram-wrap[data-filter="wallet"] .wallet-trigger {
+      width: max-content;
+      margin-right: 24px;
+      cursor: default;
+    }
+    .diagram-wrap[data-filter="wallet"] .wallet-trigger > strong,
+    .diagram-wrap[data-filter="wallet"] .wallet-trigger > .hint { cursor: pointer; }
+    .diagram-wrap[data-filter="wallet"] .wallet-details {
+      display: block;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      text-align: left;
+    }
+    .wallet-details-head {
+      font-size: 11.5px;
+      color: var(--ink-soft);
+      margin-bottom: 10px;
+    }
+    .wallet-levels {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 220px;
+      gap: 10px;
+      align-items: start;
+    }
+    .wallet-level {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .wallet-level-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+    }
+    .wallet-level-label .num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      letter-spacing: 0;
+      flex-shrink: 0;
+    }
+    .wallet-level-flow {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 8px;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    .wallet-level-flow small {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+    .wallet-feats {
+      display: grid;
+      gap: 6px;
+    }
+    .wallet-feat {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 8px;
+      text-align: left;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .wallet-feat:hover { border-color: var(--border-strong); }
+    .wallet-feat strong {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .wallet-feat span {
+      display: block;
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+    .wallet-feat.active {
+      background: #fff;
+      border-color: var(--ink);
+      box-shadow: 0 0 0 1px var(--ink);
     }
     .legend {
       display: flex;
@@ -620,10 +764,11 @@
     <!-- ===================== DIAGRAM ===================== -->
     <div class="diagram-wrap">
 
-      <div class="phase-filters" role="group" aria-label="Highlight a phase">
+      <div class="phase-filters" role="group" aria-label="Highlight a phase or focus">
         <span class="phase-filters-label">Highlight</span>
         <button type="button" class="phase-btn phase-btn-mvp" data-filter="mvp" aria-pressed="false">MVP</button>
         <button type="button" class="phase-btn phase-btn-ns" data-filter="ns" aria-pressed="false">North Star</button>
+        <button type="button" class="phase-btn phase-btn-wallet" data-filter="wallet" aria-pressed="false">Wallet</button>
       </div>
 
       <div class="main-grid">
@@ -632,10 +777,10 @@
         <div class="area-top">
           <div class="layer-label">Customer entry channels</div>
           <div class="channels">
-            <div class="node node-channel" data-phases="ns">
+            <div class="node node-channel" id="node-myatt" data-phases="ns" data-wallet>
               <strong>myAT&amp;T App</strong>
             </div>
-            <div class="node node-channel" data-phases="ns">
+            <div class="node node-channel" id="node-attcom" data-phases="ns" data-wallet>
               <strong>att.com</strong>
             </div>
           </div>
@@ -650,18 +795,18 @@
         <aside class="area-direct">
           <div class="left-band">
             <div class="att-direct-box">
-              <div class="box-title" data-phases="mvp">
+              <div class="box-title" data-phases="mvp" data-wallet>
                 AT&amp;T Direct
                 <span>no Integration layer</span>
               </div>
-              <div class="slot-sso" data-phases="mvp">
-                <div class="node node-att-direct node-mvp">
+              <div class="slot-sso" data-phases="mvp" data-wallet>
+                <div class="node node-att-direct node-mvp" id="node-sso">
                   <strong>AT&amp;T SSO</strong>
                   <span class="hint">Deep link / SSO</span>
                 </div>
               </div>
               <div class="slot-datalake" data-phases="mvp">
-                <div class="node node-att-direct node-mvp">
+                <div class="node node-att-direct node-mvp" id="node-datalake">
                   <strong>Data Pipeline</strong>
                   <span class="hint">AT&amp;T Snowflake via VTEX Data Pipeline</span>
                 </div>
@@ -676,14 +821,14 @@
             <div class="core-title">AT&amp;T Connectivity Marketplace — <em>VTEX Account</em></div>
 
             <div class="fe-row">
-              <div class="node node-module" data-phases="mvp">
+              <div class="node node-module" id="node-storefront" data-phases="mvp" data-wallet>
                 <strong>Storefront</strong>
                 <div class="phases">
                   <span class="phase phase-mvp">FastStore</span>
                   <span class="phase phase-ns">Headless Frontend</span>
                 </div>
               </div>
-              <div class="node node-module" data-phases="ns">
+              <div class="node node-module" data-phases="mvp">
                 <strong>VTEX CX Platform</strong>
                 <span class="hint">Conversational interface</span>
               </div>
@@ -691,14 +836,14 @@
 
             <div class="groups">
               <div class="group">
-                <div class="group-title" data-phases="mvp ns">Digital Commerce</div>
+                <div class="group-title" data-phases="mvp ns" data-wallet>Digital Commerce</div>
                 <div class="module-grid">
-                  <div class="node node-module" data-phases="mvp ns"><strong>Catalog</strong></div>
+                  <div class="node node-module" id="node-catalog" data-phases="mvp ns"><strong>Catalog</strong></div>
                   <div class="node node-module" data-phases="mvp ns"><strong>Pricing</strong></div>
-                  <div class="node node-module" data-phases="mvp"><strong>Promotions</strong></div>
+                  <div class="node node-module" id="node-promotions" data-phases="mvp"><strong>Promotions</strong></div>
                   <div class="node node-module" data-phases="mvp"><strong>CMS</strong></div>
                   <div class="node node-module" data-phases="mvp"><strong>AI Search Engine</strong></div>
-                  <div class="node node-module node-wallet" data-phases="mvp ns"><strong>Wallet</strong></div>
+                  <div class="node node-module" id="node-giftcard" data-phases="mvp ns" data-wallet><strong>Giftcard Hub</strong></div>
                 </div>
               </div>
               <div class="group">
@@ -711,14 +856,14 @@
             </div>
 
             <div class="group full">
-              <div class="group-title" data-phases="mvp">Transactional modules</div>
+              <div class="group-title" data-phases="mvp" data-wallet>Transactional modules</div>
               <div class="module-grid cols-6">
                 <div class="node node-module" data-phases="mvp"><strong>Inventory</strong></div>
                 <div class="node node-module" data-phases="mvp"><strong>Order Allocation</strong></div>
                 <div class="node node-module" data-phases="mvp"><strong>Delivery Promise</strong></div>
                 <div class="node node-module" data-phases="mvp"><strong>Logistics</strong></div>
-                <div class="node node-module" data-phases="mvp"><strong>Checkout</strong></div>
-                <div class="node node-module" data-phases="mvp"><strong>Payment Gateway</strong></div>
+                <div class="node node-module" id="node-checkout" data-phases="mvp" data-wallet><strong>Checkout</strong></div>
+                <div class="node node-module" id="node-payments" data-phases="mvp" data-wallet><strong>Payment Gateway</strong></div>
               </div>
             </div>
           </div>
@@ -728,19 +873,87 @@
         <!-- RIGHT: partners aligned with VTEX Account -->
         <aside class="area-partners side-col">
           <div class="layer-label">External partners</div>
-          <div class="partner-row" data-phases="mvp">
-            <div class="node node-partner">
-              <strong>Financing Providers</strong>
-              <div class="phases">
-                <span class="phase phase-mvp">Affirm</span>
+          <div class="partner-row" data-phases="mvp ns" data-wallet>
+            <div class="node node-partner wallet-trigger" id="node-wallet" role="button" tabindex="0" aria-pressed="false" title="Open Wallet focus">
+              <strong>Wallet</strong>
+              <span class="hint">Click to expand requirements</span>
+              <div class="wallet-details">
+                <div class="wallet-details-head">Wallet &amp; Credit Platform · required functionalities · third-party provider (TBD) · click a requirement to show the systems it uses</div>
+              <div class="wallet-levels">
+                <div class="wallet-level" id="wallet-l1">
+                  <div class="wallet-level-label"><span class="num">1</span>Setup</div>
+                  <div class="wallet-level-flow">Same customer</div>
+                  <div class="wallet-feats">
+                    <div class="wallet-feat" data-links="node-sso node-storefront"><strong>Wallet identity</strong></div>
+                    <div class="wallet-feat" data-links="node-sso"><strong>Account &amp; individual wallets</strong></div>
+                    <div class="wallet-feat" data-links="node-sso"><strong>Primary &amp; authorized users</strong></div>
+                    <div class="wallet-feat" data-links="node-integ"><strong>Credit types &amp; rules</strong></div>
+                    <div class="wallet-feat" data-links="node-loyalty"><strong>Tiers &amp; multipliers</strong></div>
+                    <div class="wallet-feat" data-links="node-payments node-processors"><strong>Payment methods</strong></div>
+                  </div>
+                </div>
+                <div class="wallet-level" id="wallet-l2">
+                  <div class="wallet-level-label"><span class="num">2</span>Credit is added</div>
+                  <div class="wallet-level-flow">Credit sources</div>
+                  <div class="wallet-feats">
+                    <div class="wallet-feat" data-links="node-integ"><strong>AT&amp;T adds credit</strong></div>
+                    <div class="wallet-feat" data-links="node-checkout node-storefront"><strong>Credit from a purchase</strong></div>
+                    <div class="wallet-feat" data-links="node-promotions"><strong>Promotional credit</strong></div>
+                    <div class="wallet-feat" data-links="node-loyalty"><strong>Loyalty credit</strong></div>
+                    <div class="wallet-feat" data-links="node-tradein"><strong>Trade-in credit</strong></div>
+                    <div class="wallet-feat" data-links=""><strong>Tenure &amp; recurring credits</strong></div>
+                  </div>
+                </div>
+                <div class="wallet-level" id="wallet-l3">
+                  <div class="wallet-level-label"><span class="num">3</span>Credit status</div>
+                  <div class="wallet-level-flow">Updated balance</div>
+                  <div class="wallet-feats">
+                    <div class="wallet-feat" data-links="node-giftcard"><strong>Pending → available</strong></div>
+                    <div class="wallet-feat" data-links="node-giftcard"><strong>Expiration</strong></div>
+                    <div class="wallet-feat" data-links=""><strong>Clawback &amp; forfeiture</strong></div>
+                    <div class="wallet-feat" data-links="node-sso"><strong>Transfers &amp; gifting</strong></div>
+                    <div class="wallet-feat" data-links="node-myatt node-attcom node-giftcard"><strong>Balance on AT&amp;T channels</strong></div>
+                  </div>
+                </div>
+                <div class="wallet-level" id="wallet-l4">
+                  <div class="wallet-level-label"><span class="num">4</span>Customer buys</div>
+                  <div class="wallet-level-flow">Apply credits</div>
+                  <div class="wallet-feats">
+                    <div class="wallet-feat" data-links="node-checkout node-storefront node-giftcard node-financing"><strong>Choose amount</strong></div>
+                    <div class="wallet-feat" data-links="node-checkout node-catalog"><strong>Redemption rules</strong></div>
+                    <div class="wallet-feat" data-links="node-checkout"><strong>Reserve &amp; confirm</strong></div>
+                    <div class="wallet-feat" data-links="node-checkout node-payments"><strong>No double spend</strong></div>
+                  </div>
+                </div>
+                <div class="wallet-level" id="wallet-l5">
+                  <div class="wallet-level-label"><span class="num">5</span>After purchase</div>
+                  <div class="wallet-level-flow">Settle · refund</div>
+                  <div class="wallet-feats">
+                    <div class="wallet-feat" data-links="node-checkout"><strong>Order invoiced</strong></div>
+                    <div class="wallet-feat" data-links="node-checkout"><strong>Order cancelled</strong></div>
+                    <div class="wallet-feat" data-links="node-returns node-integ"><strong>Return / refund</strong></div>
+                    <div class="wallet-feat" data-links="node-returns"><strong>Partial return</strong></div>
+                    <div class="wallet-feat" data-links="node-processors node-payments"><strong>Disputes</strong></div>
+                  </div>
+                </div>
+                <div class="wallet-level" id="wallet-l6">
+                  <div class="wallet-level-label"><span class="num">6</span>Records &amp; reporting</div>
+                  <div class="wallet-level-flow">Audit trail</div>
+                  <div class="wallet-feats">
+                    <div class="wallet-feat" data-links="node-datalake"><strong>History &amp; audit trail</strong></div>
+                    <div class="wallet-feat" data-links="node-payments node-processors node-checkout"><strong>Reconciliation</strong></div>
+                    <div class="wallet-feat" data-links="node-datalake"><strong>Reporting</strong></div>
+                  </div>
+                </div>
+              </div>
               </div>
             </div>
           </div>
-          <div class="partner-row" data-phases="ns">
-            <div class="node node-partner">
-              <strong>Trade-in Partners</strong>
+          <div class="partner-row" data-phases="mvp">
+            <div class="node node-partner" id="node-financing">
+              <strong>Financing Providers</strong>
               <div class="phases">
-                <span class="phase phase-ns">Assurant</span>
+                <span class="phase phase-mvp">Affirm</span>
               </div>
             </div>
           </div>
@@ -749,6 +962,30 @@
               <strong>Device Protection</strong>
               <div class="phases">
                 <span class="phase phase-mvp">Asurion</span>
+              </div>
+            </div>
+          </div>
+          <div class="partner-row" data-phases="mvp">
+            <div class="node node-partner">
+              <strong>Fraud</strong>
+              <div class="phases">
+                <span class="phase phase-mvp">Fiserv</span>
+              </div>
+            </div>
+          </div>
+          <div class="partner-row" data-phases="mvp" data-wallet>
+            <div class="node node-partner" id="node-processors">
+              <strong>Payment Processors</strong>
+              <div class="phases">
+                <span class="phase phase-mvp">Fiserv</span>
+              </div>
+            </div>
+          </div>
+          <div class="partner-row" data-phases="ns">
+            <div class="node node-partner" id="node-tradein">
+              <strong>Trade-in Partners</strong>
+              <div class="phases">
+                <span class="phase phase-ns">Assurant</span>
               </div>
             </div>
           </div>
@@ -761,50 +998,29 @@
               </div>
             </div>
           </div>
-          <div class="partner-row" data-phases="mvp">
-            <div class="node node-partner">
-              <strong>Fraud</strong>
-              <div class="phases">
-                <span class="phase phase-mvp">Braintree</span>
-              </div>
-            </div>
-          </div>
-          <div class="partner-row" data-phases="mvp ns">
-            <div class="node node-partner">
-              <strong>Payment Processors</strong>
-              <div class="phases">
-                <span class="phase phase-mvp">Braintree</span>
-                <span class="phase phase-ns">Fiserv</span>
-              </div>
-            </div>
-          </div>
         </aside>
 
         <!-- BELOW: Integration + Enterprise (arrows outside container) -->
         <div class="area-below">
-          <div class="integ-bar">
+          <div class="integ-bar" id="node-integ" data-wallet>
             <strong>Integration layer</strong>
             <span class="chip-mtls">mTLS</span>
             <span class="hint">MuleSoft</span>
           </div>
           <div class="enterprise-block">
-            <div class="layer-label">AT&amp;T Enterprise Systems <span style="text-transform:none;letter-spacing:0;font-weight:500;">(via Integration layer)</span></div>
+            <div class="layer-label" data-wallet>AT&amp;T Enterprise Systems <span style="text-transform:none;letter-spacing:0;font-weight:500;">(via Integration layer)</span></div>
             <div class="enterprise-wrap">
               <div class="enterprise-row">
                 <div class="node node-enterprise node-mvp" data-phases="mvp">
                   <strong>AT&amp;T OSS</strong>
                 </div>
-                <div class="node node-enterprise node-mvp" data-phases="mvp">
+                <div class="node node-enterprise node-mvp" id="node-returns" data-phases="mvp" data-wallet>
                   <strong>Return Management</strong>
                 </div>
-                <div class="node node-enterprise node-mvp" data-phases="mvp">
-                  <strong>Credit Service</strong>
-                  <span class="hint">Upstream of Wallet</span>
-                </div>
-                <div class="node node-enterprise node-ns" data-phases="ns">
+                <div class="node node-enterprise node-ns" id="node-loyalty" data-phases="ns" data-wallet>
                   <strong>Loyalty Platform</strong>
                 </div>
-                <div class="node node-enterprise node-ns" data-phases="ns">
+                <div class="node node-enterprise node-mvp" data-phases="mvp">
                   <strong>Adobe Analytics &amp; Target</strong>
                 </div>
               </div>
@@ -820,6 +1036,7 @@
         <div class="legend-item"><span class="swatch integ"></span> Integration layer</div>
         <div class="legend-item"><span class="swatch mvp"></span> MVP Phase</div>
         <div class="legend-item"><span class="swatch ns"></span> North Star Phase</div>
+        <div class="legend-item"><span class="swatch pink"></span> Wallet focus systems</div>
         <div class="legend-item"><span class="chip-mtls">mTLS</span> Integration-layer traffic</div>
       </div>
     </div>
@@ -828,8 +1045,8 @@
 
     <footer class="page-footer">
       <strong>v2.12</strong> · VTEX Rebel Pink <strong>#F71963</strong>
-      · Diagram = boxes + phase chips
-      · Updated Aug 12, 2026
+      · Diagram = boxes + phase chips · Wallet focus
+      · Updated Oct 16, 2026
       · Prior local drafts: v1 · v2.6–v2.11
     </footer>
   </div>
@@ -837,16 +1054,65 @@
     (function () {
       var wrap = document.querySelector(".diagram-wrap");
       var buttons = wrap.querySelectorAll(".phase-btn");
+      var walletTrigger = document.getElementById("node-wallet");
+
+      function clearLit() {
+        wrap.querySelectorAll(".wallet-lit").forEach(function (el) {
+          el.classList.remove("wallet-lit");
+        });
+        wrap.querySelectorAll(".wallet-feat.active").forEach(function (el) {
+          el.classList.remove("active");
+        });
+      }
+
+      function setFilter(filter) {
+        var active = wrap.getAttribute("data-filter") === filter;
+        buttons.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+        if (walletTrigger) walletTrigger.setAttribute("aria-pressed", "false");
+        clearLit();
+        if (active || !filter) {
+          wrap.removeAttribute("data-filter");
+          return;
+        }
+        wrap.setAttribute("data-filter", filter);
+        buttons.forEach(function (b) {
+          if (b.getAttribute("data-filter") === filter) b.setAttribute("aria-pressed", "true");
+        });
+        if (filter === "wallet" && walletTrigger) {
+          walletTrigger.setAttribute("aria-pressed", "true");
+        }
+      }
+
       buttons.forEach(function (btn) {
         btn.addEventListener("click", function () {
-          var filter = btn.getAttribute("data-filter");
-          var active = wrap.getAttribute("data-filter") === filter;
-          buttons.forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
-          if (active) wrap.removeAttribute("data-filter");
-          else {
-            wrap.setAttribute("data-filter", filter);
-            btn.setAttribute("aria-pressed", "true");
+          setFilter(btn.getAttribute("data-filter"));
+        });
+      });
+
+      if (walletTrigger) {
+        walletTrigger.addEventListener("click", function (e) {
+          if (e.target.closest(".wallet-details")) return;
+          setFilter("wallet");
+        });
+        walletTrigger.addEventListener("keydown", function (e) {
+          if (e.target !== walletTrigger) return;
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setFilter("wallet");
           }
+        });
+      }
+
+      wrap.querySelectorAll(".wallet-feat").forEach(function (el) {
+        el.addEventListener("click", function () {
+          var turningOn = !el.classList.contains("active");
+          clearLit();
+          if (!turningOn) return;
+          el.classList.add("active");
+          (el.getAttribute("data-links") || "").split(/\s+/).forEach(function (id) {
+            var node = id && document.getElementById(id);
+            if (node) node.classList.add("wallet-lit");
+          });
         });
       });
     })();
