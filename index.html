@@ -215,8 +215,7 @@
       grid-template-columns: 290px minmax(0, 1fr) 280px;
       grid-template-areas:
         ".        top      ."
-        "account  account  partners"
-        ".        below    .";
+        "account  account  partners";
       gap: 10px 12px;
       align-items: start;
     }
@@ -225,7 +224,8 @@
       align-self: start;
       display: grid;
       grid-template-columns: 290px minmax(0, 1fr);
-      gap: 12px;
+      grid-template-rows: auto auto;
+      gap: 10px 12px;
       align-items: stretch;
     }
     .area-top {
@@ -235,13 +235,28 @@
       gap: 12px;
     }
     .area-direct {
+      grid-column: 1;
+      grid-row: 1;
       display: flex;
       flex-direction: column;
       min-height: 100%;
     }
-    .area-core { min-height: 100%; }
-    .area-partners { grid-area: partners; align-self: start; }
-    .area-below { grid-area: below; }
+    .area-core {
+      grid-column: 2;
+      grid-row: 1;
+      min-height: 100%;
+    }
+    .area-partners {
+      grid-area: partners;
+      align-self: start;
+      width: 280px;
+      min-width: 0;
+      max-width: 280px;
+    }
+    .area-below {
+      grid-column: 2;
+      grid-row: 2;
+    }
 
     .vtex-stack {
       min-width: 0;
@@ -251,7 +266,7 @@
 
     .channels {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr;
       gap: 10px;
       margin-bottom: 8px;
     }
@@ -286,6 +301,7 @@
     }
 
     .core {
+      position: relative;
       background: var(--surface-alt);
       border: 1.5px solid var(--vtex-pink-border);
       border-radius: 16px;
@@ -367,6 +383,7 @@
     .module-grid.cols-6 {
       grid-template-columns: repeat(6, 1fr);
     }
+    #node-masterdata { display: none; }
 
     /* Side columns — arrows are row-aligned with their boxes */
     .side-col {
@@ -455,7 +472,7 @@
 
     /* Integration + enterprise */
     .integ-bar {
-      margin-top: 4px;
+      margin-top: 0;
       background: var(--integ);
       border: 1.5px solid var(--integ-border);
       border-radius: 12px;
@@ -548,7 +565,8 @@
     .diagram-wrap { position: relative; }
     .wallet-trigger {
       cursor: pointer;
-      transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+      width: 280px;
+      transition: width 0.6s ease-in-out, margin-right 0.6s ease-in-out;
     }
     .wallet-trigger:hover {
       border-color: var(--vtex-pink);
@@ -573,28 +591,93 @@
     .diagram-wrap[data-filter="wallet"] .integ-bar,
     .diagram-wrap[data-filter="wallet"] .layer-label {
       opacity: 0.22;
-      transition: opacity 0.2s ease;
     }
     .diagram-wrap[data-filter="wallet"] [data-wallet],
     .diagram-wrap[data-filter="wallet"] [data-wallet] .node,
     .diagram-wrap[data-filter="wallet"] .wallet-lit {
       opacity: 1 !important;
     }
+    .diagram-wrap[data-filter="wallet"] .wallet-lit {
+      position: relative;
+      z-index: 2;
+      outline: 2px solid var(--vtex-pink);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 4px rgba(247, 25, 99, 0.16);
+    }
+    .diagram-wrap[data-filter="wallet"] #node-masterdata.wallet-lit {
+      display: flex;
+      position: relative;
+      inset: auto;
+      width: calc(100% + 32px);
+      margin: 0 -16px -16px;
+      min-height: 48px;
+      border-radius: 0 0 14px 14px;
+      outline: none;
+      box-shadow: none;
+      z-index: 2;
+    }
+    .diagram-wrap[data-filter="wallet"] #node-masterdata.wallet-lit strong {
+      font-size: 14px;
+    }
+    .diagram-wrap[data-filter="wallet"]:has(#node-masterdata.wallet-lit) .wallet-feat:not(.active),
+    .diagram-wrap[data-filter="wallet"]:has(#node-masterdata.wallet-lit) .wallet-level-flow {
+      opacity: 0.28;
+    }
+    /* Expiration keeps Wallet, Master Data, and the integration layer. Everything else fades further. */
+    .diagram-wrap[data-filter="wallet"]:has(#node-masterdata.wallet-lit) .node:not(#node-wallet):not(#node-masterdata),
+    .diagram-wrap[data-filter="wallet"]:has(#node-masterdata.wallet-lit) .group-title,
+    .diagram-wrap[data-filter="wallet"]:has(#node-masterdata.wallet-lit) .box-title,
+    .diagram-wrap[data-filter="wallet"]:has(#node-masterdata.wallet-lit) .cdn-bar,
+    .diagram-wrap[data-filter="wallet"]:has(#node-masterdata.wallet-lit) .layer-label {
+      opacity: 0.1 !important;
+    }
+    /* A faded box should fade once. Inner hints and subtitles must not fade again. */
+    .diagram-wrap[data-filter="wallet"] .hint,
+    .diagram-wrap[data-filter="wallet"] .cdn-bar span,
+    .diagram-wrap[data-filter="wallet"] .phase {
+      opacity: 1;
+    }
+    .diagram-wrap[data-filter="wallet"] .node-module .hint,
+    .diagram-wrap[data-filter="wallet"] .node-channel .hint {
+      color: #fff;
+    }
     .diagram-wrap[data-filter="wallet"] { overflow-x: auto; }
-    .wallet-details { display: none; }
+    .wallet-details {
+      display: block;
+      max-height: 0;
+      margin-top: 0;
+      padding-top: 0;
+      overflow: hidden;
+      visibility: hidden;
+      border-top: 1px dashed transparent;
+      text-align: left;
+      transition:
+        max-height 0.6s ease-in-out,
+        margin-top 0.6s ease-in-out,
+        padding-top 0.6s ease-in-out,
+        border-color 0s 0.6s,
+        visibility 0s 0.6s;
+    }
     .diagram-wrap[data-filter="wallet"] .wallet-trigger {
-      width: max-content;
+      width: 1396px;
       margin-right: 24px;
       cursor: default;
     }
     .diagram-wrap[data-filter="wallet"] .wallet-trigger > strong,
     .diagram-wrap[data-filter="wallet"] .wallet-trigger > .hint { cursor: pointer; }
     .diagram-wrap[data-filter="wallet"] .wallet-details {
-      display: block;
+      max-height: 640px;
       margin-top: 10px;
       padding-top: 10px;
+      overflow: hidden;
+      visibility: visible;
       border-top: 1px dashed var(--border);
-      text-align: left;
+      transition:
+        max-height 0.6s ease-in-out,
+        margin-top 0.6s ease-in-out,
+        padding-top 0.6s ease-in-out,
+        border-color 0s,
+        visibility 0s;
     }
     .wallet-details-head {
       font-size: 11.5px;
@@ -687,6 +770,33 @@
       border-color: var(--ink);
       box-shadow: 0 0 0 1px var(--ink);
     }
+    .wallet-feat.pink,
+    .wallet-feat.pink:hover,
+    .wallet-feat.pink.active,
+    .wallet-level-flow.pink {
+      border-color: var(--vtex-pink);
+      box-shadow: 0 0 0 1px var(--vtex-pink);
+    }
+    .wallet-feat.pink.active { background: #fff; }
+    .wallet-feat.ns {
+      background: #EFF8FF;
+      border-color: #B2DDFF;
+    }
+    .wallet-feat.ns strong { color: #175CD3; }
+    .wallet-feat.ns:hover,
+    .wallet-feat.ns.active {
+      border-color: #175CD3;
+    }
+    .wallet-feat.ns.active {
+      background: #fff;
+      box-shadow: 0 0 0 1px #175CD3;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .wallet-trigger,
+      .wallet-details {
+        transition: none;
+      }
+    }
     .legend {
       display: flex;
       flex-wrap: wrap;
@@ -723,10 +833,12 @@
         grid-template-areas:
           "top"
           "account"
-          "partners"
-          "below";
+          "partners";
       }
-      .account-row { grid-template-columns: 1fr; }
+      .account-row { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .area-direct,
+      .area-core,
+      .area-below { grid-column: 1; grid-row: auto; }
       .area-direct { display: block; min-height: 0; }
       .left-band { flex: none; min-height: 0; }
       .att-direct-box { min-height: 0; height: auto; flex: none; }
@@ -777,9 +889,6 @@
         <div class="area-top">
           <div class="layer-label">Customer entry channels</div>
           <div class="channels">
-            <div class="node node-channel" id="node-myatt" data-phases="ns" data-wallet>
-              <strong>myAT&amp;T App</strong>
-            </div>
             <div class="node node-channel" id="node-attcom" data-phases="ns" data-wallet>
               <strong>att.com</strong>
             </div>
@@ -866,6 +975,37 @@
                 <div class="node node-module" id="node-payments" data-phases="mvp" data-wallet><strong>Payment Gateway</strong></div>
               </div>
             </div>
+
+            <div class="node node-module" id="node-masterdata" data-phases="mvp">
+              <strong>Master Data</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="area-below">
+          <div class="integ-bar" id="node-integ" data-wallet>
+            <strong>Integration layer</strong>
+            <span class="chip-mtls">mTLS</span>
+            <span class="hint">MuleSoft</span>
+          </div>
+          <div class="enterprise-block">
+            <div class="layer-label" data-wallet>AT&amp;T Enterprise Systems <span style="text-transform:none;letter-spacing:0;font-weight:500;">(via Integration layer)</span></div>
+            <div class="enterprise-wrap">
+              <div class="enterprise-row">
+                <div class="node node-enterprise node-mvp" data-phases="mvp">
+                  <strong>AT&amp;T OSS</strong>
+                </div>
+                <div class="node node-enterprise node-mvp" id="node-returns" data-phases="mvp" data-wallet>
+                  <strong>Return Management</strong>
+                </div>
+                <div class="node node-enterprise node-ns" id="node-loyalty" data-phases="ns" data-wallet>
+                  <strong>Loyalty Platform</strong>
+                </div>
+                <div class="node node-enterprise node-mvp" data-phases="mvp">
+                  <strong>Adobe Analytics &amp; Target</strong>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         </div>
@@ -878,27 +1018,29 @@
               <strong>Wallet</strong>
               <span class="hint">Click to expand requirements</span>
               <div class="wallet-details">
-                <div class="wallet-details-head">Wallet &amp; Credit Platform · required functionalities · third-party provider (TBD) · click a requirement to show the systems it uses</div>
+                <div class="wallet-details-head">Wallet &amp; Credit Platform · required functionalities · third-party provider (TBD) · click a requirement to show the systems it uses · blue boxes are open North Star ideas</div>
               <div class="wallet-levels">
                 <div class="wallet-level" id="wallet-l1">
                   <div class="wallet-level-label"><span class="num">1</span>Setup</div>
-                  <div class="wallet-level-flow">Same customer</div>
+                  <div class="wallet-level-flow pink">Same customer</div>
                   <div class="wallet-feats">
-                    <div class="wallet-feat" data-links="node-sso node-storefront"><strong>Wallet identity</strong></div>
-                    <div class="wallet-feat" data-links="node-sso"><strong>Account &amp; individual wallets</strong></div>
+                    <div class="wallet-feat pink" data-links="node-sso node-storefront"><strong>Wallet identity</strong></div>
+                    <div class="wallet-feat pink" data-links="node-sso"><strong>Account &amp; individual wallets</strong></div>
                     <div class="wallet-feat" data-links="node-sso"><strong>Primary &amp; authorized users</strong></div>
                     <div class="wallet-feat" data-links="node-integ"><strong>Credit types &amp; rules</strong></div>
-                    <div class="wallet-feat" data-links="node-loyalty"><strong>Tiers &amp; multipliers</strong></div>
-                    <div class="wallet-feat" data-links="node-payments node-processors"><strong>Payment methods</strong></div>
+                    <div class="wallet-feat ns" data-links="node-promotions"><strong>Flexible offer rules</strong><span>Flat, percent, or multiplier · purchase, event, or time window</span></div>
+                    <div class="wallet-feat pink" data-links="node-loyalty"><strong>Tiers &amp; multipliers</strong></div>
+                    <div class="wallet-feat pink" data-links="node-payments node-processors"><strong>Payment methods</strong></div>
                   </div>
                 </div>
                 <div class="wallet-level" id="wallet-l2">
                   <div class="wallet-level-label"><span class="num">2</span>Credit is added</div>
                   <div class="wallet-level-flow">Credit sources</div>
                   <div class="wallet-feats">
-                    <div class="wallet-feat" data-links="node-integ"><strong>AT&amp;T adds credit</strong></div>
-                    <div class="wallet-feat" data-links="node-checkout node-storefront"><strong>Credit from a purchase</strong></div>
+                    <div class="wallet-feat pink" data-links="node-integ"><strong>AT&amp;T adds credit</strong><span>North Star · add a line, port-in, upgrade, referral</span></div>
+                    <div class="wallet-feat pink" data-links="node-checkout node-storefront"><strong>Credit from a purchase</strong></div>
                     <div class="wallet-feat" data-links="node-promotions"><strong>Promotional credit</strong></div>
+                    <div class="wallet-feat ns" data-links="node-sellers"><strong>Seller-funded offers</strong><span>Credits funded by a third-party seller</span></div>
                     <div class="wallet-feat" data-links="node-loyalty"><strong>Loyalty credit</strong></div>
                     <div class="wallet-feat" data-links="node-tradein"><strong>Trade-in credit</strong></div>
                     <div class="wallet-feat" data-links=""><strong>Tenure &amp; recurring credits</strong></div>
@@ -906,23 +1048,24 @@
                 </div>
                 <div class="wallet-level" id="wallet-l3">
                   <div class="wallet-level-label"><span class="num">3</span>Credit status</div>
-                  <div class="wallet-level-flow">Updated balance</div>
+                  <div class="wallet-level-flow pink">Updated balance</div>
                   <div class="wallet-feats">
                     <div class="wallet-feat" data-links="node-giftcard"><strong>Pending → available</strong></div>
-                    <div class="wallet-feat" data-links="node-giftcard"><strong>Expiration</strong></div>
+                    <div class="wallet-feat" data-links="node-integ node-masterdata"><strong>Expiration</strong><span>North Star · each credit shows its own expiry · transaction-level still open</span></div>
+                    <div class="wallet-feat pink" data-links="node-storefront node-attcom node-promotions"><strong>Promo ID on credit</strong><span>Customer can see why the credit was issued</span></div>
                     <div class="wallet-feat" data-links=""><strong>Clawback &amp; forfeiture</strong></div>
-                    <div class="wallet-feat" data-links="node-sso"><strong>Transfers &amp; gifting</strong></div>
-                    <div class="wallet-feat" data-links="node-myatt node-attcom node-giftcard"><strong>Balance on AT&amp;T channels</strong></div>
+                    <div class="wallet-feat" data-links="node-sso"><strong>Transfers &amp; gifting</strong><span>North Star · same account, holder to another user</span></div>
+                    <div class="wallet-feat pink" data-links="node-attcom node-giftcard"><strong>Balance on AT&amp;T channels</strong></div>
                   </div>
                 </div>
                 <div class="wallet-level" id="wallet-l4">
                   <div class="wallet-level-label"><span class="num">4</span>Customer buys</div>
-                  <div class="wallet-level-flow">Apply credits</div>
+                  <div class="wallet-level-flow pink">Apply credits</div>
                   <div class="wallet-feats">
-                    <div class="wallet-feat" data-links="node-checkout node-storefront node-giftcard node-financing"><strong>Choose amount</strong></div>
-                    <div class="wallet-feat" data-links="node-checkout node-catalog"><strong>Redemption rules</strong></div>
+                    <div class="wallet-feat pink" data-links="node-checkout node-storefront node-giftcard node-financing"><strong>Choose amount</strong></div>
+                    <div class="wallet-feat" data-links="node-checkout node-catalog"><strong>Redemption rules</strong><span>North Star · product or brand, device cap, taxes — not settled</span></div>
                     <div class="wallet-feat" data-links="node-checkout"><strong>Reserve &amp; confirm</strong></div>
-                    <div class="wallet-feat" data-links="node-checkout node-payments"><strong>No double spend</strong></div>
+                    <div class="wallet-feat pink" data-links="node-checkout node-payments"><strong>No double spend</strong></div>
                   </div>
                 </div>
                 <div class="wallet-level" id="wallet-l5">
@@ -931,7 +1074,7 @@
                   <div class="wallet-feats">
                     <div class="wallet-feat" data-links="node-checkout"><strong>Order invoiced</strong></div>
                     <div class="wallet-feat" data-links="node-checkout"><strong>Order cancelled</strong></div>
-                    <div class="wallet-feat" data-links="node-returns node-integ"><strong>Return / refund</strong></div>
+                    <div class="wallet-feat pink" data-links="node-returns node-integ"><strong>Return / refund</strong></div>
                     <div class="wallet-feat" data-links="node-returns"><strong>Partial return</strong></div>
                     <div class="wallet-feat" data-links="node-processors node-payments"><strong>Disputes</strong></div>
                   </div>
@@ -940,7 +1083,7 @@
                   <div class="wallet-level-label"><span class="num">6</span>Records &amp; reporting</div>
                   <div class="wallet-level-flow">Audit trail</div>
                   <div class="wallet-feats">
-                    <div class="wallet-feat" data-links="node-datalake"><strong>History &amp; audit trail</strong></div>
+                    <div class="wallet-feat pink" data-links="node-datalake"><strong>History &amp; audit trail</strong></div>
                     <div class="wallet-feat" data-links="node-payments node-processors node-checkout"><strong>Reconciliation</strong></div>
                     <div class="wallet-feat" data-links="node-datalake"><strong>Reporting</strong></div>
                   </div>
@@ -990,7 +1133,7 @@
             </div>
           </div>
           <div class="partner-row" data-phases="ns">
-            <div class="node node-partner">
+            <div class="node node-partner" id="node-sellers">
               <strong>3rd-Party Sellers</strong>
               <span class="hint">AT&amp;T-curated OEMs (Samsung, Motorola…)</span>
               <div class="phases">
@@ -999,34 +1142,6 @@
             </div>
           </div>
         </aside>
-
-        <!-- BELOW: Integration + Enterprise (arrows outside container) -->
-        <div class="area-below">
-          <div class="integ-bar" id="node-integ" data-wallet>
-            <strong>Integration layer</strong>
-            <span class="chip-mtls">mTLS</span>
-            <span class="hint">MuleSoft</span>
-          </div>
-          <div class="enterprise-block">
-            <div class="layer-label" data-wallet>AT&amp;T Enterprise Systems <span style="text-transform:none;letter-spacing:0;font-weight:500;">(via Integration layer)</span></div>
-            <div class="enterprise-wrap">
-              <div class="enterprise-row">
-                <div class="node node-enterprise node-mvp" data-phases="mvp">
-                  <strong>AT&amp;T OSS</strong>
-                </div>
-                <div class="node node-enterprise node-mvp" id="node-returns" data-phases="mvp" data-wallet>
-                  <strong>Return Management</strong>
-                </div>
-                <div class="node node-enterprise node-ns" id="node-loyalty" data-phases="ns" data-wallet>
-                  <strong>Loyalty Platform</strong>
-                </div>
-                <div class="node node-enterprise node-mvp" data-phases="mvp">
-                  <strong>Adobe Analytics &amp; Target</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
       </div>
 
