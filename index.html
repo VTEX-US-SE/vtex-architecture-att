@@ -778,19 +778,6 @@
       box-shadow: 0 0 0 1px var(--vtex-pink);
     }
     .wallet-feat.pink.active { background: #fff; }
-    .wallet-feat.ns {
-      background: #EFF8FF;
-      border-color: #B2DDFF;
-    }
-    .wallet-feat.ns strong { color: #175CD3; }
-    .wallet-feat.ns:hover,
-    .wallet-feat.ns.active {
-      border-color: #175CD3;
-    }
-    .wallet-feat.ns.active {
-      background: #fff;
-      box-shadow: 0 0 0 1px #175CD3;
-    }
     @media (prefers-reduced-motion: reduce) {
       .wallet-trigger,
       .wallet-details {
@@ -895,7 +882,7 @@
           </div>
           <div class="cdn-bar" data-phases="mvp">
             VTEX CDN
-            <span>Edge · caching · TLS · WAF — storefront / webview traffic only</span>
+            <span>Edge · caching · TLS · WAF — storefront</span>
           </div>
         </div>
 
@@ -934,7 +921,6 @@
                 <strong>Storefront</strong>
                 <div class="phases">
                   <span class="phase phase-mvp">FastStore</span>
-                  <span class="phase phase-ns">Headless Frontend</span>
                 </div>
               </div>
               <div class="node node-module" data-phases="mvp">
@@ -998,11 +984,11 @@
                 <div class="node node-enterprise node-mvp" id="node-returns" data-phases="mvp" data-wallet>
                   <strong>Return Management</strong>
                 </div>
-                <div class="node node-enterprise node-ns" id="node-loyalty" data-phases="ns" data-wallet>
-                  <strong>Loyalty Platform</strong>
-                </div>
                 <div class="node node-enterprise node-mvp" data-phases="mvp">
                   <strong>Adobe Analytics &amp; Target</strong>
+                </div>
+                <div class="node node-enterprise node-ns" id="node-loyalty" data-phases="ns" data-wallet>
+                  <strong>Loyalty Platform</strong>
                 </div>
               </div>
             </div>
@@ -1018,7 +1004,7 @@
               <strong>Wallet</strong>
               <span class="hint">Click to expand requirements</span>
               <div class="wallet-details">
-                <div class="wallet-details-head">Wallet &amp; Credit Platform · required functionalities · third-party provider (TBD) · click a requirement to show the systems it uses · blue boxes are open North Star ideas</div>
+                <div class="wallet-details-head">Wallet &amp; Credit Platform · required functionalities · third-party provider (TBD) · click a requirement to show the systems it uses</div>
               <div class="wallet-levels">
                 <div class="wallet-level" id="wallet-l1">
                   <div class="wallet-level-label"><span class="num">1</span>Setup</div>
@@ -1028,7 +1014,7 @@
                     <div class="wallet-feat pink" data-links="node-sso"><strong>Account &amp; individual wallets</strong></div>
                     <div class="wallet-feat" data-links="node-sso"><strong>Primary &amp; authorized users</strong></div>
                     <div class="wallet-feat" data-links="node-integ"><strong>Credit types &amp; rules</strong></div>
-                    <div class="wallet-feat ns" data-links="node-promotions"><strong>Flexible offer rules</strong><span>Flat, percent, or multiplier · purchase, event, or time window</span></div>
+                    <div class="wallet-feat" data-links="node-promotions"><strong>Flexible offer rules</strong></div>
                     <div class="wallet-feat pink" data-links="node-loyalty"><strong>Tiers &amp; multipliers</strong></div>
                     <div class="wallet-feat pink" data-links="node-payments node-processors"><strong>Payment methods</strong></div>
                   </div>
@@ -1037,10 +1023,10 @@
                   <div class="wallet-level-label"><span class="num">2</span>Credit is added</div>
                   <div class="wallet-level-flow">Credit sources</div>
                   <div class="wallet-feats">
-                    <div class="wallet-feat pink" data-links="node-integ"><strong>AT&amp;T adds credit</strong><span>North Star · add a line, port-in, upgrade, referral</span></div>
+                    <div class="wallet-feat pink" data-links="node-integ"><strong>AT&amp;T adds credit</strong></div>
                     <div class="wallet-feat pink" data-links="node-checkout node-storefront"><strong>Credit from a purchase</strong></div>
                     <div class="wallet-feat" data-links="node-promotions"><strong>Promotional credit</strong></div>
-                    <div class="wallet-feat ns" data-links="node-sellers"><strong>Seller-funded offers</strong><span>Credits funded by a third-party seller</span></div>
+                    <div class="wallet-feat" data-links="node-sellers"><strong>Seller-funded offers</strong></div>
                     <div class="wallet-feat" data-links="node-loyalty"><strong>Loyalty credit</strong></div>
                     <div class="wallet-feat" data-links="node-tradein"><strong>Trade-in credit</strong></div>
                     <div class="wallet-feat" data-links=""><strong>Tenure &amp; recurring credits</strong></div>
@@ -1051,10 +1037,10 @@
                   <div class="wallet-level-flow pink">Updated balance</div>
                   <div class="wallet-feats">
                     <div class="wallet-feat" data-links="node-giftcard"><strong>Pending → available</strong></div>
-                    <div class="wallet-feat" data-links="node-integ node-masterdata"><strong>Expiration</strong><span>North Star · each credit shows its own expiry · transaction-level still open</span></div>
-                    <div class="wallet-feat pink" data-links="node-storefront node-attcom node-promotions"><strong>Promo ID on credit</strong><span>Customer can see why the credit was issued</span></div>
+                    <div class="wallet-feat" data-links="node-integ node-masterdata"><strong>Expiration</strong></div>
+                    <div class="wallet-feat pink" data-links="node-storefront node-attcom node-promotions"><strong>Promo ID on credit</strong></div>
                     <div class="wallet-feat" data-links=""><strong>Clawback &amp; forfeiture</strong></div>
-                    <div class="wallet-feat" data-links="node-sso"><strong>Transfers &amp; gifting</strong><span>North Star · same account, holder to another user</span></div>
+                    <div class="wallet-feat" data-links="node-sso"><strong>Transfers &amp; gifting</strong></div>
                     <div class="wallet-feat pink" data-links="node-attcom node-giftcard"><strong>Balance on AT&amp;T channels</strong></div>
                   </div>
                 </div>
@@ -1063,7 +1049,7 @@
                   <div class="wallet-level-flow pink">Apply credits</div>
                   <div class="wallet-feats">
                     <div class="wallet-feat pink" data-links="node-checkout node-storefront node-giftcard node-financing"><strong>Choose amount</strong></div>
-                    <div class="wallet-feat" data-links="node-checkout node-catalog"><strong>Redemption rules</strong><span>North Star · product or brand, device cap, taxes — not settled</span></div>
+                    <div class="wallet-feat" data-links="node-checkout node-catalog"><strong>Redemption rules</strong></div>
                     <div class="wallet-feat" data-links="node-checkout"><strong>Reserve &amp; confirm</strong></div>
                     <div class="wallet-feat pink" data-links="node-checkout node-payments"><strong>No double spend</strong></div>
                   </div>
@@ -1073,9 +1059,9 @@
                   <div class="wallet-level-flow">Settle · refund</div>
                   <div class="wallet-feats">
                     <div class="wallet-feat" data-links="node-checkout"><strong>Order invoiced</strong></div>
-                    <div class="wallet-feat" data-links="node-checkout"><strong>Order cancelled</strong></div>
+                    <div class="wallet-feat pink" data-links="node-checkout"><strong>Order cancelled</strong></div>
                     <div class="wallet-feat pink" data-links="node-returns node-integ"><strong>Return / refund</strong></div>
-                    <div class="wallet-feat" data-links="node-returns"><strong>Partial return</strong></div>
+                    <div class="wallet-feat pink" data-links="node-returns"><strong>Partial return</strong></div>
                     <div class="wallet-feat" data-links="node-processors node-payments"><strong>Disputes</strong></div>
                   </div>
                 </div>
@@ -1096,7 +1082,7 @@
             <div class="node node-partner" id="node-financing">
               <strong>Financing Providers</strong>
               <div class="phases">
-                <span class="phase phase-mvp">Affirm</span>
+                <span class="phase phase-mvp">Fiserv</span>
               </div>
             </div>
           </div>
