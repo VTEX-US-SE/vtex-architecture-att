@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>AT&amp;T Marketplace RACI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  /* Layout: architecture-asset header → operating model (3 rules) → provider ownership cards → one condensed RACI table grouped by workstream */
+  :root {
+    --vtex-pink: #F71963; --pink-dark: #E31C58; --pink-soft: #FFF0F5; --pink-border: #F9B4CB;
+    --ink: #142032; --ink-muted: #4A5568; --ink-soft: #718096;
+    --bg: #F3F4F7; --surface: #FFFFFF; --surface-alt: #F7F8FA;
+    --border: #D0D5DD; --border-strong: #98A2B3;
+    --mvp-fg: #027A48; --mvp-bg: #ECFDF3; --mvp-border: #A6F4C5;
+    --ns-fg: #175CD3; --ns-bg: #EFF8FF; --ns-border: #B2DDFF;
+    --tp-fg: #6941C6; --tp-bg: #F4F0FF; --tp-border: #D6BBFB;
+    --tbd-fg: #B54708; --tbd-bg: #FFFAEB; --tbd-border: #FEC84B;
+    --r-fg: #FFFFFF; --a-bg: #142032; --a-fg: #FFFFFF;
+    --hl: rgba(247, 25, 99, 0.07);
+    --prime-bg: #FFF7FA;
+    --shadow: 0 1px 2px rgba(20,32,50,.04), 0 8px 24px rgba(20,32,50,.06);
+    --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --pink-dark: #FF5C8F; --pink-soft: #3A1222; --pink-border: #7A2442;
+    --ink: #E8ECF2; --ink-muted: #B3BCCB; --ink-soft: #8893A5;
+    --bg: #0F141C; --surface: #171E29; --surface-alt: #1C2431;
+    --border: #2E3846; --border-strong: #4A5668;
+    --mvp-fg: #6CE9A6; --mvp-bg: #0B2A1C; --mvp-border: #1E5B3D;
+    --ns-fg: #84CAFF; --ns-bg: #0D2440; --ns-border: #1F4A7A;
+    --tp-fg: #C3B0FF; --tp-bg: #231A3D; --tp-border: #44357A;
+    --tbd-fg: #FDB022; --tbd-bg: #2E1F05; --tbd-border: #7A4D0B;
+    --a-bg: #E8ECF2; --a-fg: #0F141C; --hl: rgba(247, 25, 99, 0.12); --prime-bg: #1F1620;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    color-scheme: dark; } }
+  :root[data-theme="dark"] {
+    --pink-dark: #FF5C8F; --pink-soft: #3A1222; --pink-border: #7A2442;
+    --ink: #E8ECF2; --ink-muted: #B3BCCB; --ink-soft: #8893A5;
+    --bg: #0F141C; --surface: #171E29; --surface-alt: #1C2431;
+    --border: #2E3846; --border-strong: #4A5668;
+    --mvp-fg: #6CE9A6; --mvp-bg: #0B2A1C; --mvp-border: #1E5B3D;
+    --ns-fg: #84CAFF; --ns-bg: #0D2440; --ns-border: #1F4A7A;
+    --tp-fg: #C3B0FF; --tp-bg: #231A3D; --tp-border: #44357A;
+    --tbd-fg: #FDB022; --tbd-bg: #2E1F05; --tbd-border: #7A4D0B;
+    --a-bg: #E8ECF2; --a-fg: #0F141C; --hl: rgba(247, 25, 99, 0.12); --prime-bg: #1F1620;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    color-scheme: dark; }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg);
+    line-height: 1.45; font-size: 14px;
+    padding-block: 36px 56px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .page { max-width: 1280px; margin: 0 auto; display: grid; gap: 22px; }
+
+  header.page-header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; padding-bottom: 18px; border-bottom: 2px solid var(--vtex-pink); }
+  .eyebrow { font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--vtex-pink); margin: 0 0 6px; }
+  h1 { font-size: clamp(22px, 3vw, 28px); font-weight: 700; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  .subtitle { font-size: 13.5px; color: var(--ink-muted); max-width: 68ch; margin: 6px 0 0; }
+  .meta-badge { background: var(--pink-soft); border: 1px solid var(--pink-border); color: var(--pink-dark); font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 12px; text-align: center; }
+  .meta-badge span { display: block; font-size: 10px; font-weight: 500; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+
+  h2 { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px; }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px; box-shadow: var(--shadow); min-width: 0; }
+
+  /* Operating model */
+  .rules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .rule { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; background: var(--surface-alt); display: grid; gap: 6px; align-content: start; }
+  .rule .who { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink-muted); }
+  .rule strong { font-size: 14.5px; }
+  .rule p { margin: 0; font-size: 13px; color: var(--ink-muted); }
+
+  /* Provider cards */
+  .pcards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .pcard { border: 1px solid var(--tp-border); background: var(--tp-bg); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; }
+  .pcard-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .pcard-top strong { color: var(--tp-fg); font-size: 13.5px; }
+  .pcard dl { margin: 0; display: grid; gap: 6px; }
+  .pcard dt { font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+  .pcard dd { margin: 0; font-size: 12.5px; color: var(--ink); }
+
+  /* Chips */
+  .phase { display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: .02em; padding: 3px 8px; border-radius: 999px; border: 1px solid; line-height: 1.2; white-space: nowrap; }
+  .phase-mvp { color: var(--mvp-fg); background: var(--mvp-bg); border-color: var(--mvp-border); }
+  .phase-ns { color: var(--ns-fg); background: var(--ns-bg); border-color: var(--ns-border); }
+
+  .rc { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; font-family: var(--mono); font-size: 12px; font-weight: 600; border: 1px solid transparent; }
+  .rc + .rc { margin-left: 3px; }
+  .rc-R { background: var(--vtex-pink); color: var(--r-fg); }
+  .rc-A { background: var(--a-bg); color: var(--a-fg); }
+  .rc-C { background: var(--surface); color: var(--ink); border-color: var(--border-strong); }
+  .rc-I { background: transparent; color: var(--ink-soft); border-color: var(--border); border-style: dashed; }
+  .dash { color: var(--border-strong); font-family: var(--mono); }
+  .prime { background: var(--prime-bg); width: 104px; }
+  thead th.prime-th { background: var(--pink-soft); color: var(--pink-dark); }
+  thead tr.cap-row td, thead tr.cap-row th { position: static; box-shadow: none; padding: 8px 6px 6px; background: var(--surface); border: 0; }
+  thead tr.cap-row th.prime-cap { background: var(--pink-soft); color: var(--pink-dark); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 10px 10px 0 0; box-shadow: inset 0 -1px 0 var(--pink-border); }
+  thead th.prime-cap span { display: block; font-size: 10.5px; font-weight: 500; letter-spacing: 0; text-transform: none; margin-top: 2px; opacity: .85; }
+  tbody tr[data-phase] td.prime-l { padding-right: 2px; }
+  tbody tr[data-phase] td.prime-r { padding-left: 2px; }
+  tr.sec th { box-shadow: none; }
+  .tbd { display: inline-block; margin-left: 6px; font-size: 9.5px; font-weight: 700; letter-spacing: .04em; padding: 2px 7px; border-radius: 999px; color: var(--tbd-fg); background: var(--tbd-bg); border: 1px solid var(--tbd-border); vertical-align: 2px; }
+
+  /* Toolbar */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .seg { display: inline-flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .seg-label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: 6px; }
+  .seg button { font: inherit; font-size: 12.5px; font-weight: 500; color: var(--ink-muted); background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+  .seg button:hover { border-color: var(--border-strong); }
+  .seg button[aria-pressed="true"] { color: var(--pink-dark); background: var(--pink-soft); border-color: var(--pink-border); font-weight: 600; }
+  button:focus-visible { outline: 2px solid var(--vtex-pink); outline-offset: 2px; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+  @media (min-width: 960px) {
+    .table-wrap { overflow: visible; }
+    thead tr.cap-row td:first-child { border-top-left-radius: 12px; }
+    thead tr.cap-row td:last-child { border-top-right-radius: 12px; }
+  }
+  table { width: 100%; min-width: 880px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  thead th { position: sticky; top: env(safe-area-inset-top, 0px); background: var(--surface-alt); box-shadow: inset 0 -1px 0 var(--border); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-muted); text-align: center; padding: 10px 8px; border-bottom: 1px solid var(--border); z-index: 1; }
+  thead th:first-child { text-align: left; padding-left: 16px; }
+  thead th.tp-h { color: var(--tp-fg); }
+  thead th small { display: block; font-size: 10px; text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--ink-soft); margin-top: 2px; }
+  tr.sec th { text-align: left; background: var(--surface); padding: 18px 16px 8px; border-bottom: 1px solid var(--border); }
+  .sec-title { display: block; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .sec-desc { display: block; font-size: 12.5px; font-weight: 400; color: var(--ink-muted); margin-top: 2px; max-width: 90ch; }
+  tbody tr[data-phase] th, tbody tr[data-phase] td { padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr[data-phase] th { text-align: left; padding-left: 16px; font-weight: 400; width: 38%; }
+  .task { display: block; font-weight: 600; font-size: 13.5px; }
+  .note { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 1px; }
+  td { text-align: center; white-space: nowrap; }
+  td.ph { white-space: normal; }
+  td.ph .phase + .phase { margin-left: 3px; }
+  td.tp { text-align: left; padding-left: 14px; white-space: normal; }
+  .prov-name { display: inline-block; margin-left: 8px; font-size: 12px; font-weight: 600; color: var(--tp-fg); vertical-align: middle; }
+  td.tp .rc + .prov-name { margin-left: 8px; }
+  tbody tr[data-phase]:hover th, tbody tr[data-phase]:hover td { background: var(--surface-alt); }
+  tbody tr.hidden-row { display: none; }
+  tbody.grp.empty { display: none; }
+
+  /* Party highlight */
+  .table-wrap[data-focus] td[data-p] .rc { opacity: .25; }
+  .table-wrap[data-focus="att"] td[data-p="att"], .table-wrap[data-focus="si"] td[data-p="si"],
+  .table-wrap[data-focus="vtex"] td[data-p="vtex"], .table-wrap[data-focus="tp"] td[data-p="tp"] { background: var(--hl); }
+  .table-wrap[data-focus="att"] td[data-p="att"] .rc, .table-wrap[data-focus="si"] td[data-p="si"] .rc,
+  .table-wrap[data-focus="vtex"] td[data-p="vtex"] .rc, .table-wrap[data-focus="tp"] td[data-p="tp"] .rc { opacity: 1; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 16px; font-size: 12.5px; color: var(--ink-muted); }
+  .swatch-prime { width: 28px; height: 16px; border: 1px solid var(--pink-border); background: var(--prime-bg); border-radius: 4px; }
+  .legend span.item { display: inline-flex; align-items: center; gap: 8px; }
+  .notes { margin: 14px 0 0; padding-left: 18px; font-size: 12.5px; color: var(--ink-muted); display: grid; gap: 4px; max-width: 110ch; }
+
+  footer.page-footer { text-align: center; font-size: 11px; color: var(--ink-soft); }
+  footer.page-footer strong { color: var(--vtex-pink); }
+
+  @media (max-width: 900px) { .rules, .pcards { grid-template-columns: 1fr; } }
+  @media (min-width: 901px) and (max-width: 1100px) { .pcards, .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">VTEX Architecture · RACI v3</p>
+      <h1>AT&amp;T Connectivity Marketplace RACI</h1>
+      <p class="subtitle">Condensed view of who does what across AT&amp;T, VTEX as prime contractor, Clouda as VTEX's subcontracted SI, and third-party providers. One row per capability, 57 rows in total. Task-level detail stays in RACI v2.</p>
+    </div>
+    <div class="meta-badge"><span>Draft for review</span>Nov 3, 2026</div>
+  </header>
+
+  <section class="panel" aria-labelledby="om">
+    <h2 id="om">Operating model</h2>
+    <ul class="rules">
+      <li class="rule">
+        <div class="who"><span class="rc rc-R">R</span><span class="rc rc-A">A</span> AT&amp;T</div>
+        <strong>AT&amp;T sets the business rules</strong>
+        <p>AT&amp;T owns its customers, products, money and operations, and the source systems behind them. The marketplace consumes AT&amp;T's answers and never recalculates them.</p>
+      </li>
+      <li class="rule">
+        <div class="who"><span class="rc rc-R">R</span><span class="rc rc-A">A</span> VTEX</div>
+        <strong>VTEX runs the platform</strong>
+        <p>VTEX operates the commerce platform and keeps the marketplace records, routes every order through the required checks and applies each result.</p>
+      </li>
+      <li class="rule">
+        <div class="who"><span class="rc rc-R">R</span> Clouda <span class="rc rc-A">A</span> VTEX</div>
+        <strong>Clouda builds and maintains, under VTEX</strong>
+        <p>Clouda configures the platform, builds the storefront and every integration (including with third parties and AT&amp;T's backend), and keeps them running. VTEX approves designs and certifies connectors.</p>
+      </li>
+      <li class="rule">
+        <div class="who"><span class="rc rc-R">R</span><span class="rc rc-A">A</span> Provider</div>
+        <strong>Providers decide within their service</strong>
+        <p>Each third party owns the decisions and follow-up inside its own service, under AT&amp;T's contract and the rules AT&amp;T approves.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="po">
+    <div class="toolbar">
+      <h2 id="po" style="margin:0">Third-party providers at a glance</h2>
+      <div class="seg" role="group" aria-label="Filter providers by phase">
+        <span class="seg-label">Phase</span>
+        <button type="button" id="cp-all" data-cphase="all" aria-pressed="true">All</button>
+        <button type="button" id="cp-mvp" data-cphase="mvp" aria-pressed="false">MVP</button>
+        <button type="button" id="cp-ns" data-cphase="ns" aria-pressed="false">North Star</button>
+      </div>
+    </div>
+    <ul class="pcards">
+<li class="pcard" data-cphase="mvp"><div class="pcard-top"><strong>Fiserv Payments</strong><span class="phase phase-mvp">MVP</span></div><dl><div><dt>Builds &amp; maintains</dt><dd>Clouda, approved by VTEX</dd></div><div><dt>Owns the outcome</dt><dd>Card authorization and processing; capture and refunds run through AT&amp;T CAPM</dd></div></dl></li>
+<li class="pcard" data-cphase="mvp"><div class="pcard-top"><strong>Fiserv Antifraud</strong><span class="phase phase-mvp">MVP</span></div><dl><div><dt>Builds &amp; maintains</dt><dd>Clouda, approved by VTEX</dd></div><div><dt>Owns the outcome</dt><dd>Fraud rules (with AT&amp;T&#x27;s approval), scoring, decision, review queue, fraud response</dd></div></dl></li>
+<li class="pcard" data-cphase="mvp"><div class="pcard-top"><strong>BNPL lenders via Fiserv</strong><span class="phase phase-mvp">MVP</span></div><dl><div><dt>Builds &amp; maintains</dt><dd>Clouda, approved by VTEX</dd></div><div><dt>Owns the outcome</dt><dd>Affirm, Klarna, Afterpay: financing approval, servicing and disputes</dd></div></dl></li>
+<li class="pcard" data-cphase="ns"><div class="pcard-top"><strong>Wallet provider (TBD)</strong><span class="phase phase-ns">North Star</span></div><dl><div><dt>Builds &amp; maintains</dt><dd>Clouda, approved by VTEX</dd></div><div><dt>Owns the outcome</dt><dd>Wallet ledger and credit lifecycle if an external platform is selected</dd></div></dl></li>
+<li class="pcard" data-cphase="ns"><div class="pcard-top"><strong>Asurion</strong><span class="phase phase-ns">North Star</span></div><dl><div><dt>Builds &amp; maintains</dt><dd>Clouda, approved by VTEX</dd></div><div><dt>Owns the outcome</dt><dd>Enrollment, terms, plan payment, claims and claim fraud</dd></div></dl></li>
+<li class="pcard" data-cphase="ns"><div class="pcard-top"><strong>Assurant</strong><span class="phase phase-ns">North Star</span></div><dl><div><dt>Builds &amp; maintains</dt><dd>Clouda, approved by VTEX</dd></div><div><dt>Owns the outcome</dt><dd>Trade-in grading and credit confirmation</dd></div></dl></li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="mx">
+    <div class="toolbar">
+      <h2 id="mx" style="margin:0">RACI matrix</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:12px 20px">
+        <div class="seg" role="group" aria-label="Filter by phase">
+          <span class="seg-label">Phase</span>
+          <button type="button" id="ph-all" data-phase="all" aria-pressed="true">All</button>
+          <button type="button" id="ph-mvp" data-phase="mvp" aria-pressed="false">MVP</button>
+          <button type="button" id="ph-ns" data-phase="ns" aria-pressed="false">North Star</button>
+        </div>
+        <div class="seg" role="group" aria-label="Highlight a party">
+          <span class="seg-label">Highlight</span>
+          <button type="button" id="f-none" data-focus="" aria-pressed="true">None</button>
+          <button type="button" id="f-att" data-focus="att" aria-pressed="false">AT&amp;T</button>
+          <button type="button" id="f-vtex" data-focus="vtex" aria-pressed="false">VTEX</button>
+          <button type="button" id="f-si" data-focus="si" aria-pressed="false">Clouda</button>
+          <button type="button" id="f-tp" data-focus="tp" aria-pressed="false">Third party</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap" id="tw">
+      <table>
+        <thead>
+          <tr class="cap-row">
+            <td colspan="3"></td>
+            <th scope="colgroup" colspan="2" class="prime-cap">VTEX is prime<span>Clouda is subcontracted by VTEX</span></th>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="col">Capability</th>
+            <th scope="col">Phase</th>
+            <th scope="col">AT&amp;T</th>
+            <th scope="col" class="prime prime-th">VTEX</th>
+            <th scope="col" class="prime prime-th">Clouda</th>
+            <th scope="col" class="tp-h">Third party<small>Provider or external system</small></th>
+          </tr>
+        </thead>
+<tbody class="grp"><tr class="sec"><th colspan="6" scope="colgroup"><span class="sec-title">Requirements &amp; design</span><span class="sec-desc">What gets built and how it fits together.</span></th></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Business requirements &amp; acceptance criteria</span><span class="note">BRD user stories, open decisions, KPIs</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Provider-owned stories</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Solution architecture &amp; integration design</span><span class="note">Includes resilience, observability and data contracts</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Provider API specs</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">UX &amp; brand on the AT&amp;T design system</span><span class="note">Wireframes, accessibility (WCAG 2.2 AA), creative</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+</tbody>
+<tbody class="grp"><tr class="sec"><th colspan="6" scope="colgroup"><span class="sec-title">AT&amp;T business rules &amp; source systems</span><span class="sec-desc">AT&amp;T decides and runs these on its own systems. The marketplace consumes AT&amp;T&#x27;s answer and does not recalculate it.</span></th></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Customer authentication &amp; customer identification</span><span class="note">Login, identity validation, minimum profile attributes passed to the marketplace</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T SSO</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Eligibility, cohorts &amp; marketplace access</span><span class="note">OneConnect and Build-a-Plan gating, ineligibility reasons, cohort on/off</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T eligibility</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Product assortment &amp; catalog source data</span><span class="note">Which devices and accessories are sold, attributes, pricing reference, update feed</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T catalog feed</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Inventory availability</span><span class="note">Inventory source of truth</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T RTI · Oracle</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Order release &amp; fulfillment progression</span><span class="note">Validation, picking, packing, dispatching, delivering</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T Supply Chain (SCOR)</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Pre-shipment and return device fraud screening</span><span class="note">Fraud data elements, rules and outcomes before inventory is released</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T Supply Chain · fraud team</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Tax calculation</span><span class="note">Tax calculation, state rules, reporting and retention</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T Tax Interface</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Wallet credit rules, amounts &amp; Promotion IDs</span><span class="note">Who earns credits, how much, Welcome Credits</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T credit rules</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Payment capture, settlement &amp; refund execution <span class="tbd">TBD</span></span><span class="note">BRD: CAPM holds the payment token and SCOR starts refunds after warehouse receipt. Before the BRD we understood this would all run through Fiserv.</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="prov-name">AT&amp;T CAPM · Fiserv</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Returns, labels &amp; stolen-in-transit validation</span><span class="note">Return labels, warehouse receipt that unlocks refunds, SIT claim checks</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T Supply Chain</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Revenue accounting, journalization &amp; financial records</span><span class="note">Credit issuance and redemption, COGS reversal, reconciliation</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">ASPEN · Revenue Accounting</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Customer communication content &amp; support content</span><span class="note">AT&amp;T writes and approves content and pages through the VTEX CMS.</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Seller selection, contracts &amp; certification</span><span class="note">Which sellers and categories join, commissions, approval before a seller goes live</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">3rd-party sellers</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Seller settlement &amp; disbursement</span><span class="note">Payouts run in AT&amp;T&#x27;s back office and Fiserv; VTEX does not execute payouts</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="prov-name">Fiserv · AT&amp;T back office</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Device protection eligibility rules</span><span class="note">Which plans are offered to which devices and customers</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Asurion</span></td></tr>
+</tbody>
+<tbody class="grp"><tr class="sec"><th colspan="6" scope="colgroup"><span class="sec-title">VTEX platform &amp; storefront</span><span class="sec-desc">The commerce platform itself and what Clouda configures and builds on it.</span></th></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">VTEX SaaS operation: availability, upgrades, PCI, CDN &amp; WAF</span><span class="note">Native to the platform. No custom build.</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-I">I</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Marketplace order history &amp; wallet ledger</span><span class="note">System of record for order status, wallet balances and credit usage</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-I">I</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Catalog authoring &amp; publishing from the AT&amp;T feed</span><span class="note">Enrich, publish, suppress invalid items within agreed sync windows</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Platform configuration</span><span class="note">Pricing, promotions, checkout, OMS, shipping options, notifications</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Storefront build (FastStore)</span><span class="note">PLP, PDP, cart, checkout, My Account, credit and BNPL presentation</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">MVP wallet on VTEX (Gift Card)</span><span class="note">Balance, redemption, reversal</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Self-service returns request through MyAccount</span><span class="note">Custom area to request and check returns.</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Sending order communications</span><span class="note">Email via VTEX Message Center; SMS through AT&amp;T&#x27;s mechanism</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span><span class="prov-name">AT&amp;T SMS</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Marketplace &amp; seller configuration</span><span class="note">Seller accounts, offer management, fees and commissions per seller or category</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Conversational commerce (VTEX CX Platform)</span><span class="note">Use cases, configuration</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Data pipeline to AT&amp;T Snowflake</span><span class="note">VTEX Data Pipeline product, delivered by VTEX</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-I">I</span><span class="prov-name">AT&amp;T Snowflake</span></td></tr>
+</tbody>
+<tbody class="grp"><tr class="sec"><th colspan="6" scope="colgroup"><span class="sec-title">Integrations: build &amp; maintain</span><span class="sec-desc">Rule for every row: Clouda builds and maintains, VTEX approves the design and certifies the connector, the system owner is consulted.</span></th></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">AT&amp;T SSO &amp; eligibility</span><span class="note">SSO via OAuth 2.0: session handoff, token validation, cohort gating</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">AT&amp;T SSO</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Customer data</span><span class="note">Profile and account identifiers from AT&amp;T (name, email, stable customer ID, BAN/CTN when available) into VTEX customer records</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">AT&amp;T customer &amp; account systems</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">AT&amp;T Supply Chain via MuleSoft</span><span class="note">Order submission, RTI inventory, fulfillment events, cancellations, return labels</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">SCOR · RTI · IDPCS</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Tax integration</span><span class="note">Line-level tax request at checkout through VTEX Tax Provider Protocol</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">AT&amp;T Tax Interface</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Payments &amp; BNPL connector</span><span class="note">Fiserv Commerce Hub SDK leveraging the VTEX Payment Provider Protocol, authorization handoff to CAPM for the payment token</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Fiserv · AT&amp;T CAPM</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Anti-fraud connector</span><span class="note">VTEX Anti-fraud Provider Protocol: send order signals, receive score and outcome</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Fiserv Antifraud</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Device protection</span><span class="note">Eligibility, enrollment hand-off, enrollment acknowledgement to AT&amp;T</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Asurion</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">External wallet provider</span><span class="note">Replaces the MVP VTEX wallet leveraging the VTEX GiftCard Provider Protocol; provider still to be selected</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Wallet provider (TBD)</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">AT&amp;T product &amp; pricing via MuleSoft</span><span class="note">AT&amp;T product master becomes the catalog and pricing source, replacing the MVP feed</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">AT&amp;T product master</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Third-party seller integration (per seller)</span><span class="note">Catalog, price, inventory and order feeds over the VTEX external seller protocol</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">3rd-party sellers</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Seller settlement data</span><span class="note">Order and commission data to Fiserv and AT&amp;T back office for payouts</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Fiserv · AT&amp;T back office</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Trade-in</span><span class="note">Estimate, acceptance, status, pending vs. available credit</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Assurant</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Ongoing connector maintenance</span><span class="note">Bug fixes, provider API version changes, connector monitoring</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">Announces API changes</span></td></tr>
+</tbody>
+<tbody class="grp"><tr class="sec"><th colspan="6" scope="colgroup"><span class="sec-title">Provider decisions</span><span class="sec-desc">The marketplace passes the data and applies the answer. Decisions inside a provider&#x27;s service stay with that provider, under AT&amp;T&#x27;s contract and rules.</span></th></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Card fraud rules &amp; risk appetite</span><span class="note">Thresholds, false-positive tolerance, ≤1% fraud-rate target</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="prov-name">Fiserv Antifraud</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Card fraud scoring, decision &amp; response</span><span class="note">Approve / decline / review, manual review queue, fraud incidents</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="rc rc-A">A</span><span class="prov-name">Fiserv Antifraud</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Applying fraud &amp; payment outcomes to the order</span><span class="note">Hold, cancel or release the order and notify the customer</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-I">I</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="rc rc-I">I</span><span class="prov-name">Fiserv</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Fraud performance reporting</span><span class="note">Fraud rate, false positives, chargeback ratio</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="prov-name">Fiserv Antifraud</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Card authorization &amp; chargebacks</span><span class="note">VTEX supplies order and delivery evidence; final dispute ownership still open</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="prov-name">Fiserv Payments</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Financing approval, servicing &amp; BNPL disputes</span><span class="note">The lender decides; the marketplace honours the decision</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="rc rc-A">A</span><span class="prov-name">BNPL lenders via Fiserv</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Protection enrollment, terms, payment &amp; claims</span><span class="note">Handled on Asurion&#x27;s side, incl. loss and theft messaging</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="rc rc-A">A</span><span class="prov-name">Asurion</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Seller catalog, fulfillment, returns &amp; SLAs</span><span class="note">Each seller fulfils and services its own orders under the policies AT&amp;T sets</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="prov-name">3rd-party sellers</span></td></tr>
+<tr data-phase="ns"><th scope="row"><span class="task">Trade-in grading &amp; credit confirmation</span><span class="note">Credit is confirmed only after grading</span></th><td class="ph"><span class="phase phase-ns">North Star</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="rc rc-A">A</span><span class="prov-name">Assurant</span></td></tr>
+</tbody>
+<tbody class="grp"><tr class="sec"><th colspan="6" scope="colgroup"><span class="sec-title">Test, launch &amp; run</span><span class="sec-desc">From QA through hypercare and production support.</span></th></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">QA: end-to-end, performance &amp; security testing</span><span class="note">Includes provider sandbox runs</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">All providers</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">UAT, go/no-go &amp; go-live</span><span class="note">AT&amp;T signs off per workstream</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-C">C</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-C">C</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">All providers</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Hypercare (30 days after go-live)</span><span class="note">Stabilization and fixes</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">All providers</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Production support: platform incidents</span><span class="note">VTEX platform availability and native modules</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-I">I</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-R">R</span><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="dash" aria-label="not involved">–</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Production support: integration incidents</span><span class="note">Triage across Clouda, VTEX and the system owner</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-I">I</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-A">A</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-R">R</span></td><td data-p="tp" class="tp"><span class="rc rc-C">C</span><span class="prov-name">All providers</span></td></tr>
+<tr data-phase="mvp"><th scope="row"><span class="task">Production support: provider-side outages</span><span class="note">Provider SLAs under AT&amp;T&#x27;s contract</span></th><td class="ph"><span class="phase phase-mvp">MVP</span></td><td data-p="att"><span class="rc rc-C">C</span></td><td data-p="vtex" class="prime prime-l"><span class="rc rc-I">I</span></td><td data-p="si" class="prime prime-r"><span class="rc rc-I">I</span></td><td data-p="tp" class="tp"><span class="rc rc-R">R</span><span class="rc rc-A">A</span><span class="prov-name">All providers</span></td></tr>
+</tbody>
+      </table>
+    </div>
+
+    <div class="legend">
+      <span class="item"><span class="swatch-prime" aria-hidden="true"></span> VTEX contract: VTEX is prime, Clouda is subcontracted by VTEX</span>
+      <span class="item"><span class="rc rc-R">R</span> Responsible: does the work</span>
+      <span class="item"><span class="rc rc-A">A</span> Accountable: approves and signs off</span>
+      <span class="item"><span class="rc rc-C">C</span> Consulted</span>
+      <span class="item"><span class="rc rc-I">I</span> Informed</span>
+      <span class="item"><span class="phase phase-mvp">MVP</span> 1Q27 launch</span>
+      <span class="item"><span class="phase phase-ns">North Star</span> 2H27</span>
+    </div>
+    <ul class="notes">
+      <li>The "Third party" column also names the AT&amp;T system behind a row (SCOR, RTI, CAPM, ASPEN, Tax Interface, SSO) so it is clear where each answer comes from. A name without a letter means the system is AT&amp;T's and is covered by the AT&amp;T column.</li>
+      <li>Wallet runs natively on VTEX (Gift Card) for MVP. An external wallet provider comes in North Star and is still to be selected. Device protection with Asurion is also North Star.</li>
+    </ul>
+  </section>
+
+  <footer class="page-footer"><strong>VTEX</strong> · Project Loretta · RACI v3 (condensed) · companion to Architecture v2.12</footer>
+</div>
+
+<script>
+(function () {
+  var tw = document.getElementById('tw');
+  var phaseBtns = document.querySelectorAll('[data-phase][type="button"]');
+  var focusBtns = document.querySelectorAll('[data-focus]');
+  function setPressed(list, el) { list.forEach(function (b) { b.setAttribute('aria-pressed', b === el ? 'true' : 'false'); }); }
+  phaseBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var p = b.getAttribute('data-phase'); setPressed(phaseBtns, b);
+      tw.querySelectorAll('tbody.grp').forEach(function (g) {
+        var shown = 0;
+        g.querySelectorAll('tr[data-phase]').forEach(function (r) {
+          var ph = r.getAttribute('data-phase');
+          var show = p === 'all' || ph === 'both' || ph === p;
+          r.classList.toggle('hidden-row', !show); if (show) shown++;
+        });
+        g.classList.toggle('empty', shown === 0);
+      });
+    });
+  });
+  var cBtns = document.querySelectorAll('button[data-cphase]');
+  cBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var p = b.getAttribute('data-cphase'); setPressed(cBtns, b);
+      document.querySelectorAll('li.pcard').forEach(function (c) {
+        var ph = c.getAttribute('data-cphase');
+        c.hidden = !(p === 'all' || ph === 'both' || ph === p);
+      });
+    });
+  });
+  focusBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var f = b.getAttribute('data-focus'); setPressed(focusBtns, b);
+      if (f) tw.setAttribute('data-focus', f); else tw.removeAttribute('data-focus');
+    });
+  });
+})();
+</script>
+</body>
+</html>
